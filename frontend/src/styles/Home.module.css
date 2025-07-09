@@ -1,0 +1,146 @@
+
+.homeRoot {
+  position: relative;
+  min-height: 100vh;
+  background-color: #030303;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  padding-bottom: 4rem;
+}
+
+.gradientBg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.15), transparent 60%),
+              radial-gradient(circle at bottom right, rgba(236, 72, 153, 0.1), transparent 60%);
+  z-index: 0;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  padding: 8rem 2rem 6rem;
+  text-align: center;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2.5rem;
+  color: #e2e2e2;
+}
+
+.heroButton {
+  font-size: 1.25rem;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.heroButton:hover {
+  transform: scale(1.05);
+}
+
+.section {
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.darkSection {
+  background-color: #111111;
+  border-radius: 20px;
+  padding: 5rem 3rem;
+  margin-top: 4rem;
+}
+
+.sectionTitle {
+  font-size: 2.75rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.sectionSubtitle {
+  font-size: 1.3rem;
+  margin-bottom: 2.5rem;
+  color: #cccccc;
+}
+
+.sectionBox {
+  height: 320px;
+  background-color: #1f1f1f;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 1.25rem;
+}
+
+.howCards {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.howCard {
+  background-color: #1a1a1a;
+  padding: 2rem;
+  border-radius: 16px;
+  flex: 1 1 300px;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.howIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.howTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.howDesc {
+  font-size: 1.05rem;
+  color: #cccccc;
+}
+
+.ctaSection {
+  text-align: center;
+  padding: 6rem 2rem;
+}
+
+.ctaButton {
+  display: inline-block;
+  margin-top: 2rem;
+  font-size: 1.25rem;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.ctaButton:hover {
+  transform: scale(1.05);
+}

@@ -1,0 +1,42 @@
+
+.title {
+  text-align: center;
+  color: #ffffff;
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  background-color: #0d1117;
+  color: #c9d1d9;
+}
+
+.input::placeholder {
+  color: #8b949e;
+}
+
+.button {
+  padding: 10px;
+  background-color: #238636;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: #2ea043;
+}
+
+.error {
+  color: #f85149;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.link {
+  text-align: center;
+  font-size: 0.95rem;
+}

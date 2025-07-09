@@ -1,0 +1,80 @@
+# -------------------------
+# PYTHON / DJANGO
+# -------------------------
+*.py[cod]
+__pycache__/
+*.sqlite3
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env.*
+media/
+staticfiles/
+**/migrations/
+!**/migrations/__init__.py
+
+# -------------------------
+# FRONTEND (VITE + NODE)
+# -------------------------
+# Ignore frontend dependencies
+/frontend/node_modules/
+/frontend/dist/
+/frontend/dist-ssr/
+
+# Logs in frontend
+/frontend/*.log
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/pnpm-debug.log*
+
+# -------------------------
+# ROOT-LEVEL NODE SETUP (if used)
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# -------------------------
+# ENVIRONMENTS
+# -------------------------
+.venv/
+venv/
+
+# -------------------------
+# OS FILES
+# -------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# -------------------------
+# VS CODE
+# -------------------------
+.vscode/*
+!.vscode/extensions.json
+
+# -------------------------
+# IDEs
+# -------------------------
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# -------------------------
+# GIT
+# -------------------------
+*.orig
+*.lock
+*.bak
+*.tmp
+

@@ -1,0 +1,29 @@
+.issue-map-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: center;
+  }
+  
+  .map-description-form textarea {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 1rem;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .map-description-form button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #0088ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .map-description-form button:disabled {
+    background-color: gray;
+  }
+  

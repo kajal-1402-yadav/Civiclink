@@ -1,0 +1,128 @@
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+//in requirements.txt
+asgiref
+Django
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+PyJWT
+pytz
+sqlparse
+psycopg2-binary
+python-dotenv
+
+django-admin startproject backend
+cd backend
+python manage.py startapp api
+
+in settings.py add
+    from datetime import timedelta
+    from dotenv import load_dotenv
+    import os
+
+    load_dotenv()
+
+//and
+    ALLOWED_HOSTS = ["*"]
+
+    REST_FRAMEWORK = {
+        "DEFAULT_AUTHENTICATION_CLASSES": (
+            "rest_framework_simplejwt.authentication.JWTAuthentication",
+        ),
+        "DEFAULT_PERMISSION_CLASSES": [
+            "rest_framework.permissions.IsAuthenticated",
+        ],
+    }
+
+    SIMPLE_JWT = {
+        "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+        "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    }
+
+    "corsheaders.middleware.CorsMiddleware",  ADD THIS IN middleware
+
+
+write apps in installed apps
+
+
+AT LAST LINE ADD--
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+JWT WILL ACT AS THE PERMISSIONS OR AUTHENTICATION EVERYTIME WE ACCESS A WEBSITE
+
+
+
+create serializers.py in api
+from rest_framework import serializers
+from .models import CustomUser, Issue
+
+# 🔐 User Serializer (handles both Reporter & Admin)
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'password', 'role']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    # This is called when a new user is created via API.
+    def create(self, validated_data):
+        # Uses create_user method from CustomUserManager
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
+
+
+# 📝 Issue Serializer
+class IssueSerializer(serializers.ModelSerializer):
+    reporter = serializers.ReadOnlyField(source='reporter.username')
+    resolved_by = serializers.ReadOnlyField(source='resolved_by.username')
+
+    class Meta:
+        model = Issue
+        fields = [
+            'id', 'title', 'description', 'image',
+            'location_lat', 'location_lng', 'category',
+            'status', 'created_at', 'updated_at',
+            'reporter', 'resolved_by'
+        ]
+
+views.py and urls and models and views
+
+
+in api urls.py
+
+
+//frontend
+main directory
+npm create vite@latest frontend -- --template react  
+cd frontend
+npm install axios react-router-dom jwt-decode
+make .env file in frontend/src 
+also consants.js
+export const ACCESS_TOKEN = "access";
+export const REFRESH_TOKEN = "refresh";
+api.js
+import axios from "axios";
+import { ACCESS_TOKEN } from "./constants";
+
+const apiUrl = "/choreo-apis/awbo/backend/rest-api-be2/v1.0";
+
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : apiUrl,
+});
+
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem(ACCESS_TOKEN);
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+export default api;

@@ -1,0 +1,120 @@
+
+.reportIssueContainer {
+  max-width: 640px;
+  margin: 60px auto;
+  padding: 40px;
+  background-color: #121212;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+}
+
+.reportIssueContainer h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 30px;
+  font-weight: bold;
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.reportIssueForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputLabel {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.reportIssueForm input,
+.reportIssueForm textarea,
+.reportIssueForm select,
+.reportIssueForm button {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 20px;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: Consolas, 'Courier New', monospace;
+  transition: border 0.2s ease, background 0.3s ease;
+}
+
+.reportIssueForm input:focus,
+.reportIssueForm textarea:focus,
+.reportIssueForm select:focus {
+  outline: none;
+  border-color: #6366f1;
+  background-color: #0e0e0e;
+}
+
+.reportIssueForm textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+.reportIssueForm button {
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.reportIssueForm button:hover {
+  transform: scale(1.03);
+}
+
+.imageUploadSection {
+  margin-bottom: 24px;
+}
+
+.imageUploadBox {
+  border: 2px dashed #444;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.imageUploadBox:hover {
+  background-color: #2a2a2a;
+}
+
+.uploadIcon {
+  font-size: 42px;
+  margin-bottom: 10px;
+  color: #ec4899;
+}
+
+.uploadText {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.imageHint {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+.imagePreview {
+  max-width: 100%;
+  max-height: 250px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #555;
+}

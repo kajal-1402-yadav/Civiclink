@@ -1,0 +1,211 @@
+
+.container {
+  background-color: #030303;
+  background-image: radial-gradient(circle at top left, rgba(99, 102, 241, 0.08), transparent 40%),
+                    radial-gradient(circle at bottom right, rgba(236, 72, 153, 0.07), transparent 40%);
+  color: #f0f6fc;
+  padding: 40px 20px;
+  min-height: 100vh;
+  max-width: 100vw;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Filter Bar */
+.filterBar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+  background-color: #161b22;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #30363d;
+}
+
+.filterBar select {
+  background-color: #0d1117;
+  color: #f0f6fc;
+  border: 1px solid #30363d;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Card */
+.card {
+  display: flex;
+  gap: 1.5rem;
+  background: linear-gradient(145deg, rgba(15, 15, 20, 0.95), rgba(20, 20, 25, 0.95));
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  padding: 1.8rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+  transform: translateY(-2px);
+}
+
+.image {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #2c2f36;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.details {
+  flex: 1;
+  z-index: 1;
+}
+
+.details h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: orange;
+}
+
+.details p,
+.details span {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+.details strong {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.priorityTag {
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.priorityLow {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.priorityMedium {
+  background-color: #facc15;
+  color: #1e1e1e;
+}
+
+.priorityHigh {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.progressBarBg {
+  background-color: #2f3b4b;
+  height: 10px;
+  border-radius: 10px;
+  margin-top: 8px;
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  background-color: #4ade80;
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #8b949e;
+  margin-bottom: 12px;
+}
+
+.progressPercent {
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  margin-bottom: 12px;
+}
+
+/* Votes */
+.voteBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.voteBox button {
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.voteBox button:hover {
+  opacity: 0.85;
+}
+
+.toggleComment {
+  cursor: pointer;
+  color: #a5b4fc;
+  text-decoration: underline;
+  margin-left: 10px;
+}
+
+.resolvedBy {
+  margin-top: 10px;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+/* Own Report Highlight (if needed for future) */
+.yourReport {
+  border: 1px solid #6366f1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+  }
+
+  .details {
+    margin-top: 1rem;
+  }
+}

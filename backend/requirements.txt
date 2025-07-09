@@ -1,0 +1,18 @@
+asgiref
+Django
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+# djoser
+PyJWT
+pytz
+sqlparse
+psycopg2-binary
+python-dotenv
+Pillow
+tensorflow
+numpy
+requests
+beautifulsoup4
+joblib
+scikit-learn

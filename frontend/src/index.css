@@ -1,0 +1,9 @@
+/* index.css */
+
+
+
+.leaflet-container {
+  height: 300px;
+  width: 100%;
+  margin-bottom: 1rem;
+}

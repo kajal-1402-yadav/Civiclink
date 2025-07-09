@@ -1,0 +1,113 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #030303;
+  color: #ffffff;
+  padding: 20px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbarLeft {
+  display: flex;
+  align-items: center;
+}
+
+.navbarLogo {
+  width: 36px;
+  height: 36px;
+  margin-right: 12px;
+}
+
+.navbarTitle {
+  font-size: 32px;
+  font-weight: bold;
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.navbarCenter {
+  display: flex;
+  gap: 24px;
+}
+
+.navbarLink {
+  text-decoration: none;
+  color: #cccccc;
+  font-size: 20px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.navbarLink::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  transition: width 0.3s ease;
+}
+
+.navbarLink:hover::after {
+  width: 100%;
+}
+
+.navbarLink:hover {
+  color: #ffffff;
+}
+
+.navbarRight {
+  display: flex;
+  gap: 16px;
+}
+
+.navbarBtn {
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.navbarBtn:hover {
+  transform: scale(1.05);
+}
+
+.logoutBtn {
+  background: linear-gradient(to right, #6366f1, #ec4899);
+}
+
+.loginBtn {
+  background: linear-gradient(to right, #6366f1, #ec4899);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbarCenter {
+    display: none;
+  }
+
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .navbarBtn {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+}
