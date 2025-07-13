@@ -38,7 +38,7 @@ function Form({ route, method }) {
           if (userRes.data.role === "admin") {
             navigate("/admin-dashboard");
           } else {
-            navigate("/");
+            navigate("/home");
           }
         } catch (error) {
           console.error("[❌] Failed to fetch user role:", error);
@@ -62,50 +62,65 @@ function Form({ route, method }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.container}>
-      <h1 className={styles.title}>{name}</h1>
-
-      <input
-        className={styles.input}
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        required
-      />
-
-      {method === "register" && (
-        <input
-          className={styles.input}
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-      )}
-
-      <input
-        className={styles.input}
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      />
-
-      {loading && <LoadingIndicator />}
-
-      <button className={styles.button} type="submit">
-        {name}
-      </button>
-
-      {method === "login" && (
-        <p className={styles.link}>
-          Don&apos;t have an account? <Link to="/register">Register here</Link>
+    <div className={styles.formWrapper}>
+      <div className={styles.formContent}>
+        <h1 className={styles.heading}>
+          {name} to <span className={styles.gradientText}>CivicLink</span>
+        </h1>
+        <p className={styles.description}>
+          {method === "login"
+            ? "Welcome back! Sign in to track, report, and connect with your community."
+            : "Join CivicLink to report and resolve civic issues in your neighborhood."}
         </p>
-      )}
-    </form>
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            className={styles.input}
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            required
+          />
+
+          {method === "register" && (
+            <input
+              className={styles.input}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+            />
+          )}
+
+          <input
+            className={styles.input}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
+
+          {loading && <LoadingIndicator />}
+
+          <button className={styles.button} type="submit">
+            {name}
+          </button>
+
+          {method === "login" ? (
+            <p className={styles.link}>
+              Don&apos;t have an account? <Link to="/register">Register here</Link>
+            </p>
+          ) : (
+            <p className={styles.link}>
+              Already have an account? <Link to="/login">Login here</Link>
+            </p>
+          )}
+        </form>
+      </div>
+    </div>
   );
 }
 

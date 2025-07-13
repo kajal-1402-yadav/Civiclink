@@ -1,15 +1,10 @@
-*{
-  margin: 0;
-  padding: 0;
-}
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #030303;
   color: #ffffff;
   padding: 20px 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -20,17 +15,12 @@
   align-items: center;
 }
 
-.navbarLogo {
-  width: 36px;
-  height: 36px;
-  margin-right: 12px;
-}
-
 .navbarTitle {
-  font-size: 32px;
+  font-size:48px;
   font-weight: bold;
   background: linear-gradient(to right, #6366f1, #ec4899);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -42,7 +32,7 @@
 .navbarLink {
   text-decoration: none;
   color: #cccccc;
-  font-size: 20px;
+  font-size: 25px;
   position: relative;
   transition: color 0.3s ease;
 }
@@ -54,7 +44,6 @@
   height: 2px;
   bottom: -4px;
   left: 0;
-  background: linear-gradient(to right, #6366f1, #ec4899);
   transition: width 0.3s ease;
 }
 

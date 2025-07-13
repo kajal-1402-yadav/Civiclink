@@ -15,6 +15,16 @@ class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'admin'
 
+class CreateAdminView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]  # You can restrict this later
+
+    def perform_create(self, serializer):
+        serializer.save(role='admin')
+
+
+
 # 👤 Create User (Signup)
 class CreateUserView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()

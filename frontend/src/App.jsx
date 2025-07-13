@@ -10,6 +10,8 @@ import EditIssue from "./pages/EditIssue";
 import CommunityIssues from "./pages/CommunityIssues";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import AdminDashboard from "./pages/AdminDashboard";
+import LandingPage from "./pages/LandingPage";
 
 function Logout() {
   localStorage.clear();
@@ -24,11 +26,21 @@ function RegisterAndLogout() {
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes>
         {/* ✅ Public Home (or wrap with ProtectedRoute if needed) */}
         <Route
           path="/"
+          element={
+            <LandingPage />
+            // If you want to protect Home:
+            // <ProtectedRoute><Home /></ProtectedRoute>
+          }
+        />
+
+        
+        <Route
+          path="/home"
           element={
             <Home />
             // If you want to protect Home:
@@ -64,7 +76,7 @@ function App() {
           }
         />
 
-<Route
+        <Route
           path="/api/public-issues"
           element={
             <ProtectedRoute>
@@ -74,6 +86,14 @@ function App() {
         />
         <Route path="/edit-issue/:issueId" element={<EditIssue />} />
 
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
         {/* ✅ Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterAndLogout />} />

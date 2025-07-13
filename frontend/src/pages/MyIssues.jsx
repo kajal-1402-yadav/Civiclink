@@ -97,7 +97,6 @@ function MyIssuesPage() {
               <p>📍 {issue.address}</p>
 
               <div className={styles.progressSection}>
-                <p>Progress</p>
                 <div className={styles.progressBarBg}>
                   <div
                     className={styles.progressBarFill}

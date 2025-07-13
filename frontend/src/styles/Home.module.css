@@ -1,146 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 .homeRoot {
-  position: relative;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to bottom, #000000, #1f1f3f);
+  color: #ffffff;
   min-height: 100vh;
-  background-color: #030303;
-  color: white;
-  font-family: 'Space Grotesk', sans-serif;
-  padding-bottom: 4rem;
+  overflow-x: hidden;
 }
 
 .gradientBg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.15), transparent 60%),
-              radial-gradient(circle at bottom right, rgba(236, 72, 153, 0.1), transparent 60%);
-  z-index: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top left, #6366f1, transparent 50%),
+              radial-gradient(circle at bottom right, #ec4899, transparent 50%);
+  z-index: -1;
 }
 
 .heroContent {
-  position: relative;
-  z-index: 1;
-  padding: 8rem 2rem 6rem;
+  max-width: 800px;
+  margin: 4rem auto 3rem;
   text-align: center;
-  max-width: 960px;
-  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
   line-height: 1.2;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .heroSubtitle {
-  font-size: 1.5rem;
-  margin-bottom: 2.5rem;
-  color: #e2e2e2;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: #d1d5db;
 }
 
 .heroButton {
-  font-size: 1.25rem;
-  padding: 1rem 2.5rem;
-  background: linear-gradient(to right, #6366f1, #ec4899);
-  color: white;
-  border: none;
+  display: inline-block;
+  margin-top: 2rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   border-radius: 8px;
+  color: white;
   text-decoration: none;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .heroButton:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
 }
 
 .section {
-  padding: 6rem 2rem;
+  padding: 4rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.darkSection {
-  background-color: #111111;
-  border-radius: 20px;
-  padding: 5rem 3rem;
-  margin-top: 4rem;
+  text-align: center;
 }
 
 .sectionTitle {
-  font-size: 2.75rem;
+  font-size: 2rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .sectionSubtitle {
-  font-size: 1.3rem;
-  margin-bottom: 2.5rem;
-  color: #cccccc;
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 2rem;
+}
+
+.darkSection {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  padding: 3rem 2rem;
+  margin-top: 2rem;
 }
 
 .sectionBox {
-  height: 320px;
-  background-color: #1f1f1f;
-  border-radius: 16px;
+  height: 250px;
+  background-color: #111827;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
-  font-size: 1.25rem;
+  color: #9ca3af;
+  font-size: 1.1rem;
 }
 
 .howCards {
   display: flex;
-  flex-direction: row;
-  gap: 2rem;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
 .howCard {
-  background-color: #1a1a1a;
+  background-color: #1f2937;
   padding: 2rem;
-  border-radius: 16px;
-  flex: 1 1 300px;
-  max-width: 360px;
+  border-radius: 1rem;
+  width: 300px;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .howIcon {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 1rem;
 }
 
 .howTitle {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .howDesc {
-  font-size: 1.05rem;
-  color: #cccccc;
+  font-size: 0.95rem;
+  color: #d1d5db;
 }
 
 .ctaSection {
-  text-align: center;
-  padding: 6rem 2rem;
+  margin-top: 3rem;
 }
 
 .ctaButton {
+  margin-top: 1.5rem;
   display: inline-block;
-  margin-top: 2rem;
-  font-size: 1.25rem;
-  padding: 1rem 2.5rem;
-  background: linear-gradient(to right, #6366f1, #ec4899);
+  background: linear-gradient(90deg, #6366f1, #ec4899);
   color: white;
-  border: none;
-  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  border-radius: 0.5rem;
   text-decoration: none;
-  transition: transform 0.3s ease;
 }
 
-.ctaButton:hover {
-  transform: scale(1.05);
+.iconContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 0.75rem;
+}
+
+.iconCircle {
+  width:40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #a855f7, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.iconCircle img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
 }

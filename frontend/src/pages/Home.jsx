@@ -1,8 +1,34 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import styles from "../styles/Home.module.css";
+import navbarStyles from "../styles/Navbar.module.css";
+import Symbol from "../assets/Symbol.png"; // Assuming you have a logo image
 
 export default function Home() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem("access")));
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsLoggedIn(Boolean(localStorage.getItem("access")));
+    };
+
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+    };
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
   const fadeUp = (delay = 0) => ({
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
@@ -15,6 +41,37 @@ export default function Home() {
 
   return (
     <div className={styles.homeRoot}>
+      {/* ✅ Merged Navbar */}
+      <nav className={navbarStyles.navbar}>
+        <div className={navbarStyles.navbarLeft}>
+<div className={styles.iconContainer}>
+                <div className={styles.iconCircle}>
+                  <img src={Symbol} alt="CivicLink Logo" />
+                </div>
+              </div>          <span className={navbarStyles.navbarTitle}>CivicLink</span>
+        </div>
+
+        <div className={navbarStyles.navbarCenter}>
+          <Link to="/" className={navbarStyles.navbarLink}>Home</Link>
+          <Link to="/report" className={navbarStyles.navbarLink}>Report Issue</Link>
+          <Link to="/issues-map" className={navbarStyles.navbarLink}>Map</Link>
+          <Link to="/my-issues" className={navbarStyles.navbarLink}>My Issues</Link>
+          <Link to="/api/public-issues" className={navbarStyles.navbarLink}>Community</Link>
+        </div>
+
+        <div className={navbarStyles.navbarRight}>
+          {isLoggedIn ? (
+            <button onClick={handleLogout} className={`${navbarStyles.navbarBtn} ${navbarStyles.logoutBtn}`}>
+              Logout
+            </button>
+          ) : (
+            <Link to="/login" className={`${navbarStyles.navbarBtn} ${navbarStyles.loginBtn}`}>
+              Sign In
+            </Link>
+          )}
+        </div>
+      </nav>
+
       {/* Background Gradient */}
       <div className={styles.gradientBg} />
 
