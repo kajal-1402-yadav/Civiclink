@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../api";
 import CommentsSection from "../components/CommentsSection";
 import styles from "../styles/CommunityIssues.module.css";
+import Navbar from "../components/Navbar";
 
 function CommunityIssues() {
   const [issues, setIssues] = useState([]);
@@ -79,6 +80,7 @@ function CommunityIssues() {
   };
 
   return (
+    <><Navbar />
     <div className={styles.container}>
       <h2 className={styles.title}>Community Reported Issues</h2>
 
@@ -180,6 +182,7 @@ function CommunityIssues() {
         </div>
       ))}
     </div>
+    </>
   );
 }
 

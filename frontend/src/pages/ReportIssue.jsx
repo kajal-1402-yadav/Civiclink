@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../api";
 import styles from "../styles/ReportIssue.module.css";
+import Navbar from "../components/Navbar";
 
 function ReportIssue() {
   const [title, setTitle] = useState("");
@@ -66,7 +67,11 @@ function ReportIssue() {
   };
 
   return (
+    <>
+    <Navbar />
     <div className={styles.reportIssueContainer}>
+                  
+
       <h2>Report an Issue</h2>
       <form onSubmit={handleSubmit} className={styles.reportIssueForm}>
         <div className={styles.imageUploadSection}>
@@ -131,6 +136,7 @@ function ReportIssue() {
         <button type="submit">Submit Issue</button>
       </form>
     </div>
+    </>
   );
 }
 

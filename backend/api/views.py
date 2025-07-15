@@ -208,3 +208,26 @@ def delete_comment(request, comment_id):
         return Response({"error": "Comment not found"}, status=404)
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_issue_status(request, pk):
+    try:
+        issue = Issue.objects.get(pk=pk)
+
+        # Optional: restrict who can change status
+        if issue.reporter != request.user and request.user.role != 'admin':
+            return Response({"error": "Not authorized to update this issue"}, status=403)
+
+        new_status = request.data.get("status")
+        valid_statuses = [choice[0] for choice in Issue.STATUS_CHOICES]
+
+        if new_status == "Closed" and request.user.role != "admin":
+            return Response({"error": "Only admin can close issues"}, status=403)
+
+
+        issue.status = new_status
+        issue.save()
+        return Response({"message": "Status updated", "status": issue.status}, status=200)
+
+    except Issue.DoesNotExist:
+        return Response({"error": "Issue not found"}, status=404)

@@ -4,6 +4,7 @@ import api from "../api";
 import styles from "../styles/IssueMap.module.css";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import Navbar from "../components/Navbar";
 
 // Fix Leaflet icon bug
 delete L.Icon.Default.prototype._getIconUrl;
@@ -32,6 +33,8 @@ function IssueMap() {
 
   return (
     <div className={styles.mapWrapper}>
+                  <Navbar />
+
       <h2 className={styles.heading}>Live Issue Map</h2>
       <MapContainer center={[20.5937, 78.9629]} zoom={5} className={styles.map}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

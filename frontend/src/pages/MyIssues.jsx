@@ -33,12 +33,16 @@ function MyIssuesPage() {
   });
 
   const getProgressPercent = (status) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "pending":
-        return 25;
-      case "in_progress":
+        return 10;
+      case "acknowledged":
+        return 30;
+      case "in progress":
         return 60;
       case "resolved":
+        return 90;
+      case "closed":
         return 100;
       default:
         return 0;
@@ -56,8 +60,10 @@ function MyIssuesPage() {
         >
           <option value="">All Statuses</option>
           <option value="pending">Pending</option>
-          <option value="in_progress">In Progress</option>
+          <option value="acknowledged">Acknowledged</option>
+          <option value="in progress">In Progress</option>
           <option value="resolved">Resolved</option>
+          <option value="closed">Closed</option>
         </select>
 
         <select

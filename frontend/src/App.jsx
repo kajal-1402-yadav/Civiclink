@@ -9,9 +9,10 @@ import ReportIssue from "./pages/ReportIssue";
 import EditIssue from "./pages/EditIssue";
 import CommunityIssues from "./pages/CommunityIssues";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import LandingPage from "./pages/LandingPage";
+import Analytics from "./pages/Analytics";
 
 function Logout() {
   localStorage.clear();
@@ -26,7 +27,6 @@ function RegisterAndLogout() {
 function App() {
   return (
     <BrowserRouter>
-      {/* <Navbar /> */}
       <Routes>
         {/* ✅ Public Home (or wrap with ProtectedRoute if needed) */}
         <Route
@@ -47,6 +47,9 @@ function App() {
             // <ProtectedRoute><Home /></ProtectedRoute>
           }
         />
+
+        {/* ✅ Public Routes */}
+        <Route path="/analytics" element={<Analytics />} />
 
         {/* ✅ Protected Routes */}
         <Route
@@ -94,6 +97,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+
         {/* ✅ Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterAndLogout />} />

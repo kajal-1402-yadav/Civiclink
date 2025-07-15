@@ -13,6 +13,7 @@ from .views import (
     delete_comment,
     comments_view,
     CreateAdminView,
+    update_issue_status,
     
 )
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path('public-issues/', public_issues, name='public-issues'),
 path('issue/<int:issue_id>/comments/', comments_view, name='comments_view'),
     path('comment/<int:comment_id>/delete/', delete_comment, name='delete_comment'),
+path("issue/<int:pk>/update-status/", update_issue_status),
 
  path('admin/register/', CreateAdminView.as_view(), name='admin-register'),
 

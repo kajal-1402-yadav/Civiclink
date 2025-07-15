@@ -34,11 +34,14 @@ class CustomUser(AbstractUser):
 
 # ✅ Civic Issue Model
 class Issue(models.Model):
+    # Define choices for status, category, and priority
     STATUS_CHOICES = (
-        ('pending', 'Pending'),
-        ('in_progress', 'In Progress'),
-        ('resolved', 'Resolved'),
-    )
+        ('Open', 'Open'),
+        ('Acknowledged', 'Acknowledged'),
+        ('In Progress', 'In Progress'),
+        ('Resolved', 'Resolved'),
+        ('Closed', 'Closed'),
+     )
 
     CATEGORY_CHOICES = (
         ('road', 'Road'),
@@ -61,7 +64,7 @@ class Issue(models.Model):
     address = models.CharField(max_length=255)  # ✅ Replaced lat/lng with address
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
     priority = models.CharField(max_length=10,choices=PRIORITY_CHOICES,default='medium',blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Open')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
