@@ -31,9 +31,6 @@ export default function Home() {
           <Link to="/api/public-issues" className={styles.navLink}>
             Community
           </Link>
-          <Link to="/profile" className={styles.navLink}>
-            Profile
-          </Link>
           <button onClick={handleLogout} className={styles.logoutBtn}>
             Logout
           </button>

@@ -25,6 +25,8 @@ class CustomUser(AbstractUser):
         ('reporter', 'Reporter'),
         ('admin', 'Admin'),
     )
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='reporter')
     objects = CustomUserManager()

@@ -1,7 +1,8 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 import styles from "../styles/Dashboard.module.css";
-import Symbol from "../assets/Symbol.png"; // ✅ check path
+import Symbol from "../assets/Symbol.png";
 import useUserStats from "../hooks/useUserStats";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const { total, resolved, upvotes, comments, activity, loading } =
@@ -17,15 +18,17 @@ const Dashboard = () => {
               <img src={Symbol} alt="CivicLink Logo" />
             </div>
           </div>
-          {"    "}
           <div className={styles.navTitle}>CivicLink</div>
         </div>
         <nav className={styles.navLinks}>
-          <a href="/home">Home</a>
-          <a href="/my-issues">My Issues</a>
-          <a href="/report">Report Issue</a>
-          <a href="/analytics">Analytics</a>
-          <a href="/home" className={styles.backBtn}>Back</a>
+          <Link to="/home">Home</Link>
+          <Link to="/my-issues">My Issues</Link>
+          <Link to="/report">Report Issue</Link>
+          <Link to="/analytics">Analytics</Link>
+          <Link to="/user/info/">Profile</Link>
+          <Link to="/home" className={styles.backBtn}>
+            Back
+          </Link>
         </nav>
       </header>
 
@@ -73,6 +76,9 @@ const Dashboard = () => {
             </div>
           </div>
         </section>
+
+        {/* Nested routes will render here */}
+        <Outlet />
       </main>
     </div>
   );

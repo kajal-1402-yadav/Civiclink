@@ -14,6 +14,8 @@ from .views import (
     comments_view,
     CreateAdminView,
     update_issue_status,
+    user_info,
+    update_user,
     
 )
 
@@ -29,10 +31,14 @@ urlpatterns = [
     path('issue/<int:issue_id>/upvote/', upvote_issue, name='upvote_issue'),    
     path('issue/<int:issue_id>/downvote/',downvote_issue, name='downvote_issue'),
     path('public-issues/', public_issues, name='public-issues'),
-path('issue/<int:issue_id>/comments/', comments_view, name='comments_view'),
+    path('issue/<int:issue_id>/comments/', comments_view, name='comments_view'),
     path('comment/<int:comment_id>/delete/', delete_comment, name='delete_comment'),
-path("issue/<int:pk>/update-status/", update_issue_status),
+    path("issue/<int:pk>/update-status/", update_issue_status),
+    path('admin/register/', CreateAdminView.as_view(), name='admin-register'),
+    path('issue/<int:pk>/update/', UpdateIssueView.as_view(), name='update-issue'),
+    path('user/update/', update_user, name='update-user'),
 
- path('admin/register/', CreateAdminView.as_view(), name='admin-register'),
+ 
 
 ]
+

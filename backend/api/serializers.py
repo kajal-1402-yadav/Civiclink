@@ -5,8 +5,11 @@ from datetime import date
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'password', 'role']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['id', 'username', 'email', 'password', 'role', 'profile_picture']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'role': {'read_only': True},
+        }
 
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)

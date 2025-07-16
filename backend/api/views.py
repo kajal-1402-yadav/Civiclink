@@ -8,6 +8,9 @@ from .models import CustomUser, Issue ,Comment
 from .serializers import UserSerializer, IssueSerializer ,CommentSerializer
 from .classify import classify_issue_image
 from rest_framework.decorators import api_view, permission_classes
+# from channels.layers import get_channel_layer
+# from asgiref.sync import async_to_sync
+
 
 
 #  Inline Admin permission
@@ -64,17 +67,15 @@ class ReportIssueView(generics.CreateAPIView):
         }
 
         # ✅ WebSocket: Notify all listening clients about the new issue
-        from channels.layers import get_channel_layer
-        from asgiref.sync import async_to_sync
-
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "issues",  # Channel group name (you'll later subscribe to this group from frontend WebSocket)
-            {
-                "type": "send_new_issue",  # This triggers the method `send_new_issue()` in your consumer.py
-                "message": f"New issue reported: {issue.title}",
-            }
-        )
+        
+        # channel_layer = get_channel_layer()
+        # async_to_sync(channel_layer.group_send)(
+        #     "issues",  # Channel group name (you'll later subscribe to this group from frontend WebSocket)
+        #     {
+        #         "type": "send_new_issue",  # This triggers the method `send_new_issue()` in your consumer.py
+        #         "message": f"New issue reported: {issue.title}",
+        #     }
+        # )
 
 
     def create(self, request, *args, **kwargs):
@@ -130,16 +131,6 @@ class ResolveIssueView(APIView):
         issue.resolved_by = request.user
         issue.save()
         return Response({'message': 'Issue marked as resolved'})
-
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def user_info(request):
-    return Response({
-        "username": request.user.username,
-        "role": request.user.role,
-    })
 
 
 @api_view(['POST'])
@@ -231,3 +222,41 @@ def update_issue_status(request, pk):
 
     except Issue.DoesNotExist:
         return Response({"error": "Issue not found"}, status=404)
+
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_info(request):
+    profile_picture_url = (
+        request.build_absolute_uri(request.user.profile_picture.url)
+        if request.user.profile_picture
+        else None
+    )
+
+    return Response({
+        "username": request.user.username,
+        "email": request.user.email,
+        "role": request.user.role,
+        "date_joined": request.user.date_joined,
+        "profile_picture": profile_picture_url,
+    })
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user(request):
+    user = request.user
+    data = request.data
+
+    # Only update allowed fields
+    if 'username' in data:
+        user.username = data['username']
+    if 'email' in data:
+        user.email = data['email']
+    if 'password' in data and data['password'].strip() != "":
+        user.set_password(data['password'])
+
+    user.save()
+
+    serializer = UserSerializer(user)
+    return Response(serializer.data)

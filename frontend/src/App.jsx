@@ -3,16 +3,21 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LandingPage from "./pages/LandingPage";
+
+// Dashboard pages
+import Dashboard from "./pages/Dashboard";
 import MyIssues from "./pages/MyIssues";
-import IssueMap from "./pages/IssueMap";
 import ReportIssue from "./pages/ReportIssue";
+import IssueMap from "./pages/IssueMap";
 import EditIssue from "./pages/EditIssue";
 import CommunityIssues from "./pages/CommunityIssues";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Dashboard from "./pages/Dashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import LandingPage from "./pages/LandingPage";
 import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
+
+// Admin
+import AdminDashboard from "./pages/AdminDashboard";
 
 function Logout() {
   localStorage.clear();
@@ -28,75 +33,14 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ✅ Public Home (or wrap with ProtectedRoute if needed) */}
-        <Route
-          path="/"
-          element={
-            <LandingPage />
-            // If you want to protect Home:
-            // <ProtectedRoute><Home /></ProtectedRoute>
-          }
-        />
+        {/* 🌐 Public Pages */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterAndLogout />} />
+        <Route path="*" element={<NotFound />} />
 
-        
-        <Route
-          path="/home"
-          element={
-            <Home />
-            // If you want to protect Home:
-            // <ProtectedRoute><Home /></ProtectedRoute>
-          }
-        />
-
-        {/* ✅ Public Routes */}
-        <Route path="/analytics" element={<Analytics />} />
-
-        {/* ✅ Protected Routes */}
-        <Route
-          path="/report"
-          element={
-            <ProtectedRoute>
-              <ReportIssue />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/issues-map"
-          element={
-            <ProtectedRoute>
-              <IssueMap />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/my-issues"
-          element={
-            <ProtectedRoute>
-              <MyIssues />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/api/public-issues"
-          element={
-            <ProtectedRoute>
-              <CommunityIssues />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/edit-issue/:issueId" element={<EditIssue />} />
-
-        <Route
-          path="/admin-dashboard"
-          element={
-            <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+        {/* 🔐 Main App Protected Routes */}
         <Route
           path="/dashboard"
           element={
@@ -105,15 +49,28 @@ function App() {
             </ProtectedRoute>
           }
         />
+          {/* ⬇️ Nested under /dashboard (relative paths only) */}
+          <Route path="/user/info" element={<Profile />} />
+          <Route path="/my-issues" element={<MyIssues />} />
+          <Route path="/report" element={<ReportIssue />} />
+          <Route path="/issues-map" element={<IssueMap />} />
+          <Route path="/edit-issue/:issueId" element={<EditIssue />} />
+          <Route path="/community" element={<CommunityIssues />} />
+          <Route path="/analytics" element={<Analytics />} />
+       
 
+        {/* 🔒 Admin-only dashboard */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* ✅ Auth Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<RegisterAndLogout />} />
+        {/* 🔓 Optional: Logout Route */}
         <Route path="/logout" element={<Logout />} />
-
-        {/* ✅ 404 */}
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

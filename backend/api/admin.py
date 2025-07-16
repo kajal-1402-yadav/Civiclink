@@ -1,18 +1,25 @@
 from django.contrib import admin
-from django.utils.html import format_html
+from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Issue
-
-@admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'role', 'is_staff', 'is_superuser']
-    list_filter = ['role', 'is_staff', 'is_superuser']
-    search_fields = ['username', 'email']
-    
 from datetime import date
-from django.utils.html import format_html
-from django.contrib import admin
-from .models import Issue, CustomUser
 
+# ✅ CustomUser Admin using UserAdmin
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ('username', 'email', 'role', 'is_staff', 'is_superuser')  # Removed 'name'
+    list_filter = ('role', 'is_staff', 'is_superuser')
+    search_fields = ('username', 'email')
+
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional Info', {'fields': ('role',)}),  # Removed 'name'
+    )
+
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Additional Info', {'fields': ('role',)}),  # Removed 'name'
+    )
+
+# ✅ Issue Admin
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
     list_display = [
@@ -24,7 +31,7 @@ class IssueAdmin(admin.ModelAdmin):
         'resolved_by',
         'address',
         'created_at',
-        'days_open',  # ✅ Add this
+        'days_open',
     ]
     list_filter = ['status', 'category', 'priority']
     search_fields = ['title', 'description', 'address']
@@ -45,6 +52,5 @@ class IssueAdmin(admin.ModelAdmin):
         if obj.status == 'resolved' and obj.updated_at:
             return (obj.updated_at.date() - obj.created_at.date()).days
         return (date.today() - obj.created_at.date()).days
+
     days_open.short_description = 'Open (Days)'
-
-
