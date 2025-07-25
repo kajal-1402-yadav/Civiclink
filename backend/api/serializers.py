@@ -3,6 +3,18 @@ from .models import CustomUser, Issue ,Comment
 from datetime import date
 
 class UserSerializer(serializers.ModelSerializer):
+    date_joined = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S.%fZ", read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'password', 'role', 'profile_picture', 'date_joined']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'role': {'read_only': True},
+        }
+    
+    
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'password', 'role', 'profile_picture']

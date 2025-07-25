@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 import styles from "../styles/Dashboard.module.css";
-import Symbol from "../assets/Symbol.png";
 import useUserStats from "../hooks/useUserStats";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
   const { total, resolved, upvotes, comments, activity, loading } =
@@ -10,27 +10,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardWrapper}>
-      {/* Top Navbar */}
-      <header className={styles.navbar}>
-        <div className={styles.navLeft}>
-          <div className={styles.iconContainer}>
-            <div className={styles.iconCircle}>
-              <img src={Symbol} alt="CivicLink Logo" />
-            </div>
-          </div>
-          <div className={styles.navTitle}>CivicLink</div>
-        </div>
-        <nav className={styles.navLinks}>
-          <Link to="/home">Home</Link>
-          <Link to="/my-issues">My Issues</Link>
-          <Link to="/report">Report Issue</Link>
-          <Link to="/analytics">Analytics</Link>
-          <Link to="/user/info/">Profile</Link>
-          <Link to="/home" className={styles.backBtn}>
-            Back
-          </Link>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* Main Dashboard Content */}
       <main className={styles.main}>

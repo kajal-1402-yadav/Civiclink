@@ -33,15 +33,19 @@ function Form({ route, method }) {
 
         try {
           const userRes = await api.get("/api/user/info/");
-          localStorage.setItem("role", userRes.data.role);
+          const userData = userRes.data;
 
-          if (userRes.data.role === "admin") {
+          localStorage.setItem("role", userData.role);
+          localStorage.setItem("username", userData.username); // optional
+localStorage.setItem("date_joined", userData.date_joined.split("T")[0]);
+
+          if (userData.role === "admin") {
             navigate("/admin-dashboard");
           } else {
             navigate("/home");
           }
         } catch (error) {
-          console.error("[❌] Failed to fetch user role:", error);
+          console.error("[❌] Failed to fetch user info:", error);
           navigate("/");
         }
 
@@ -111,7 +115,8 @@ function Form({ route, method }) {
 
           {method === "login" ? (
             <p className={styles.link}>
-              Don&apos;t have an account? <Link to="/register">Register here</Link>
+              Don&apos;t have an account?{" "}
+              <Link to="/register">Register here</Link>
             </p>
           ) : (
             <p className={styles.link}>

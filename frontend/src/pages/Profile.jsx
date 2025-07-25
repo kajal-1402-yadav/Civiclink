@@ -1,155 +1,171 @@
-import React, { useEffect, useState } from "react";
-import styles from "../styles/Profile.module.css";
+import React, { useState, useEffect } from "react";
 import api from "../api";
+import styles from "../styles/Profile.module.css";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
-  const [profilePic, setProfilePic] = useState(null);
-  const [message, setMessage] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    profile_picture: null,
+  });
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
-    api
-      .get("/api/user/info/")
-      .then((res) => {
-        setUser(res.data);
-        setForm({
-          username: res.data.username || "",
-          email: res.data.email || "",
-          password: "",
-        });
-      })
-      .catch((err) => console.error("Error fetching user info:", err));
-  }, []);
+  const fetchUser = async () => {
+    const res = await api.get("/api/user/info/");
+    console.log("User info response:", res.data); // ✅ ADD THIS HERE
+    setUser(res.data);
+    setFormData((prev) => ({
+      ...prev,
+      username: res.data.username,
+      email: res.data.email,
+    }));
+  };
+  fetchUser();
+}, []);
+
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value, files } = e.target;
+    if (name === "profile_picture") {
+      const file = files[0];
+      setFormData((prev) => ({ ...prev, profile_picture: file }));
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = new FormData();
+    data.append("username", formData.username);
+    data.append("email", formData.email);
+    if (formData.password) data.append("password", formData.password);
+    if (formData.profile_picture)
+      data.append("profile_picture", formData.profile_picture);
 
-    const formData = new FormData();
-    formData.append("username", form.username);
-    formData.append("email", form.email);
-    if (form.password.trim()) formData.append("password", form.password);
-    if (profilePic) formData.append("profile_picture", profilePic);
+    const res = await api.put("/api/user/update/", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
-    try {
-      await api.put("/api/user/update/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
 
-      const res = await api.get("/api/user/info/");
-      setUser(res.data);
-      setForm({ ...form, password: "" });
-      setProfilePic(null);
-      setMessage("Profile updated successfully!");
-      setEditing(false);
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      setMessage("Update failed. Try again.");
-    }
+    setUser(res.data);
+    setEditMode(false);
+    setPreview(null);
   };
 
-  if (!user) {
-    return <div className={styles.loading}>Loading your profile...</div>;
-  }
+  if (!user) return <div className={styles.loading}>Loading...</div>;
 
   return (
     <div className={styles.profileContainer}>
-      <h1 className={styles.title}>Your Profile</h1>
-
       <div className={styles.card}>
-        <div className={styles.avatar}>
+        <h2 className={styles.title}>My Profile</h2>
+
+        <div className={styles.avatarWrapper}>
           <img
+            className={styles.avatar}
             src={
-              user.profile_picture
+              preview
+                ? preview
+                : user.profile_picture
                 ? user.profile_picture
                 : "/assets/user-placeholder.png"
             }
-            alt="User Avatar"
+            alt="Profile"
           />
-        </div>
 
-        <div className={styles.details}>
-          <p><strong>Username:</strong> {user.username}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Role:</strong> {user.role}</p>
-          <p><strong>Joined:</strong> {new Date(user.date_joined).toDateString()}</p>
-        </div>
-      </div>
-
-      <div className={styles.editSection}>
-        <h2>Edit Info</h2>
-
-        {!editing ? (
-          <button className={styles.editBtn} onClick={() => setEditing(true)}>
-            Edit Profile
-          </button>
-        ) : (
-          <form onSubmit={handleSubmit} className={styles.editForm}>
-            <label>
-              Username:
-              <input
-                type="text"
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                required
-              />
-            </label>
-
-            <label>
-              Email:
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-            </label>
-
-            <label>
-              New Password:
-              <input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Leave blank to keep current"
-              />
-            </label>
-
-            <label>
-              Profile Picture:
+          {editMode && (
+            <>
+              <label htmlFor="profilePicInput" className={styles.editIcon}>
+                ✏️
+              </label>
               <input
                 type="file"
+                id="profilePicInput"
+                name="profile_picture"
+                onChange={handleChange}
                 accept="image/*"
-                onChange={(e) => setProfilePic(e.target.files[0])}
+                className={styles.hiddenFileInput}
               />
-            </label>
+            </>
+          )}
+        </div>
 
-            <div className={styles.buttonRow}>
+        {editMode ? (
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Username"
+              className={styles.input}
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className={styles.input}
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              onChange={handleChange}
+              placeholder="New Password (optional)"
+              className={styles.input}
+            />
+            <div className={styles.actions}>
               <button type="submit" className={styles.saveBtn}>
                 Save
               </button>
               <button
                 type="button"
+                onClick={() => setEditMode(false)}
                 className={styles.cancelBtn}
-                onClick={() => setEditing(false)}
               >
                 Cancel
               </button>
             </div>
           </form>
-        )}
+        ) : (
+          <>
+            <p className={styles.text}>
+              <strong>Username:</strong> {user.username}
+            </p>
+            <p className={styles.text}>
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p className={styles.text}>
+              <strong>Role:</strong> {user.role}
+            </p>
+            <p className={styles.text}>
+  <strong>Joined:</strong>{" "}
+  {user.date_joined
+    ? new Date(user.date_joined).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "Unknown"}
+</p>
 
-        {message && <p className={styles.message}>{message}</p>}
+
+            <button
+              onClick={() => setEditMode(true)}
+              className={styles.editBtn}
+            >
+              Edit Profile
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

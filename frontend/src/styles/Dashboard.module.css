@@ -19,42 +19,6 @@
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.4);
 }
 
-.iconCircle {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #d53f8c, #805ad5);
-}
-
-.iconCircle img {
-  width:5rem;
-  height: 5rem;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.navItem {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #f1f5f9;
-  text-decoration: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-
-.navItem:hover {
-  background: linear-gradient(90deg, #4299e1, #d53f8c);
-  color: #ffffff;
-}
 
 .main {
   flex: 1;
@@ -143,69 +107,10 @@
   border-radius: 8px;
   border: 1px dashed #475569;
 }
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background: linear-gradient(to right, #000000, #1f1f3f);
-  border-bottom: 2px solid #2d2d4f;
-  font-family: 'Inter', sans-serif;
-}
 
-.navLeft {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
 
-.logoIcon {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-  object-fit: cover;
-  background: linear-gradient(135deg, #ec4899, #6366f1);
-  padding: 5px;
-}
 
-.navTitle {
-  font-size: 30px;
-  font-weight: bold;
-  background: linear-gradient(to right, #6366f1, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
-.navLinks {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-}
 
-.navLinks a {
-  color: #cccccc;
-  text-decoration: none;
-  font-size: 28px;
-  transition: color 0.3s ease;
-}
 
-.navLinks a:hover {
-  color: #ffffff;
-}
 
-.backBtn {
-  background: linear-gradient(to right, #6366f1, #ec4899);
-  border: none;
-  padding: 10px 18px;
-  color: white;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 20px !important;
-  transition: transform 0.3s ease;
-}
-
-.logoutBtn:hover {
-  transform: scale(1.05);
-}

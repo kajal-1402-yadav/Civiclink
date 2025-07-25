@@ -223,7 +223,6 @@ def update_issue_status(request, pk):
     except Issue.DoesNotExist:
         return Response({"error": "Issue not found"}, status=404)
 
-    
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -238,9 +237,10 @@ def user_info(request):
         "username": request.user.username,
         "email": request.user.email,
         "role": request.user.role,
-        "date_joined": request.user.date_joined,
+        "date_joined": request.user.date_joined.isoformat(),  # ✅ must be iso string
         "profile_picture": profile_picture_url,
     })
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -248,7 +248,6 @@ def update_user(request):
     user = request.user
     data = request.data
 
-    # Only update allowed fields
     if 'username' in data:
         user.username = data['username']
     if 'email' in data:
@@ -256,7 +255,11 @@ def update_user(request):
     if 'password' in data and data['password'].strip() != "":
         user.set_password(data['password'])
 
+    # ✅ Handle profile picture upload
+    if 'profile_picture' in request.FILES:
+        user.profile_picture = request.FILES['profile_picture']
+
     user.save()
 
-    serializer = UserSerializer(user)
+    serializer = UserSerializer(user, context={'request': request})
     return Response(serializer.data)

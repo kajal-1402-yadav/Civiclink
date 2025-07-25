@@ -1,141 +1,117 @@
-/* Profile.module.css */
 
 .profileContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #000000, #2D244A);
   font-family: 'Roboto', sans-serif;
-  padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  color: #ffffff;
-  background: linear-gradient(180deg, #0a0a0a, #121220, #2d244a);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #444;
   border-radius: 1rem;
+  padding: 2rem;
+    margin-bottom: 100px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  color: white;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: center;
-  background: linear-gradient(90deg, #4299e1, #d53f8c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.card {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  background: #1a1a2e;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  margin-bottom: 2rem;
-}
-
-.avatar img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #4299e1;
-}
-
-.details p {
-  font-size: 1.1rem;
-  margin: 0.3rem 0;
-  color: #d1d5db;
-}
-
-.editSection {
-  background: #1f1f3b;
-  padding: 1.5rem;
-  border-radius: 1rem;
-}
-
-.editSection h2 {
   font-size: 1.8rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(90deg, #4299e1, #d53f8c);
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #4299e1, #d53f8c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.editBtn {
-  background: linear-gradient(90deg, #4299e1, #d53f8c);
-  color: #fff;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  font-weight: bold;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: transform 0.2s;
-}
-
-.editBtn:hover {
-  transform: translateY(-2px);
-}
-
-.editForm label {
-  display: block;
-  margin-bottom: 1rem;
-  color: #ffffff;
-  font-weight: 500;
-}
-
-.editForm input {
+.input {
   width: 100%;
-  padding: 0.6rem;
-  background-color: #2d2d4a;
-  border: 1px solid #444;
-  border-radius: 0.5rem;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background-color: #1a1a2e;
   color: white;
-  font-size: 1rem;
-  margin-top: 0.3rem;
+  border: 1px solid #555;
+  border-radius: 0.5rem;
 }
 
-.buttonRow {
+.fileInput {
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.actions {
   display: flex;
+  justify-content: space-between;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
-.saveBtn {
-  background: linear-gradient(90deg, #4299e1, #38b2ac);
-  color: white;
-  border: none;
-  padding: 0.6rem 1.4rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
+.editBtn,
+.saveBtn,
 .cancelBtn {
-  background: #4b5563;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.4rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 0.5rem;
-  font-weight: bold;
+  border: none;
   cursor: pointer;
-  transition: transform 0.2s;
+  background: linear-gradient(to right, #4299e1, #d53f8c);
+  color: white;
+  font-weight: bold;
+  transition: opacity 0.3s ease;
 }
 
+.editBtn:hover,
 .saveBtn:hover,
 .cancelBtn:hover {
-  transform: translateY(-2px);
+  opacity: 0.85;
 }
 
-.message {
-  margin-top: 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #38b2ac;
+.text {
+  margin: 0.5rem 0;
 }
 
 .loading {
   text-align: center;
-  padding: 3rem;
-  font-size: 1.5rem;
-  color: #a0aec0;
+  color: white;
+  padding-top: 4rem;
+}
+
+.avatarWrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto;
+}
+
+.avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid #4299e1;
+}
+
+.editIcon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #4299e1;
+  color: white;
+  padding: 0.3rem 0.4rem;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.editIcon:hover {
+  background: #3182ce;
+}
+
+.hiddenFileInput {
+  display: none;
 }
