@@ -5,6 +5,11 @@ import Symbol from "../assets/Symbol.png";
 
 
 const Navbar = () => {
+   const handleLogout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    navigate("/");
+  };
   return (
     <header className={styles.navbar}>
             <div className={styles.navLeft}>
@@ -21,9 +26,10 @@ const Navbar = () => {
               <Link to="/report">Report Issue</Link>
               <Link to="/analytics">Analytics</Link>
               <Link to="/user/info/">Profile</Link>
-              <Link to="/home" className={styles.backBtn}>
-                Back
-              </Link>
+             <button onClick={handleLogout} className={styles.logoutBtn}>
+                         Logout
+                       </button>
+              
             </nav>
           </header>
   );

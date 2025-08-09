@@ -2,6 +2,7 @@ import React from 'react';
 import styles from '../styles/Analytics.module.css';
 import useAnalyticsData from '../hooks/useAnalyticsData';
 import { LineChart, Line, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, BarChart, Bar, ResponsiveContainer } from 'recharts';
+import Navbar from '../components/Navbar';
 
 const COLORS = ['#60a5fa', '#a78bfa', '#f472b6'];
 
@@ -26,7 +27,10 @@ const Analytics = () => {
   const barData = Object.entries(categoryCounts).map(([name, value]) => ({ name, value }));
 
   return (
+    <>
+    <Navbar/>
     <div className={styles.analytics}>
+      
       <h1 className={styles.pageTitle}>Analytics Dashboard</h1>
 
       {/* Summary Cards */}
@@ -84,6 +88,7 @@ const Analytics = () => {
         <div className={styles.mapPlaceholder}>🗺️ Map placeholder – lat/lng not available</div>
       </section>
     </div>
+    </>
   );
 };
 

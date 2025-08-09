@@ -1,116 +1,490 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+/* Dashboard.module.css - Black & Red Professional Design */
 
-.dashboard {
-  display: flex;
-  height: 100vh;
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(180deg, #0a0a0a 0%, #121220 35%, #2d244a 100%);
-  color: #ffffff;
+.dashboardWrapper {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* color: #1a1a1a; */
 }
-
-.sidebar {
-  width: 240px;
-  background: #0b0b0b;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  border-right: 1px solid #333;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.4);
-}
-
 
 .main {
-  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
   padding: 2rem;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
+/* Stats Cards Section */
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid #444;
-  padding: 1.2rem;
+  /* background: white; */
   border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 0 12px rgba(66, 153, 225, 0.3);
-  transition: transform 0.2s ease;
+  padding: 2rem 1.5rem;
+  border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
+
+
+
+
 
 .card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  border-color: #dc2626;
 }
 
 .card h3 {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #e2e8f0;
-  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #525252;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .card p {
-  font-size: 1.6rem;
-  font-weight: bold;
-  background: linear-gradient(90deg, #4299e1, #d53f8c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
 }
 
-.lowerSection {
+.card:hover p {
+  color: #dc2626;
+}
+
+/* Loading state for cards */
+.card p:contains("Loading") {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #a3a3a3;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.card p:contains("Loading")::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e5e5e5;
+  border-top: 2px solid #dc2626;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Lower Section Layout */
+.lowerSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
 }
 
-.activity, .mapBox, .chart {
-  flex: 1;
-  min-width: 300px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid #333;
+/* Activity Section */
+.activity {
+  background: white;
   border-radius: 12px;
-  padding: 1.2rem;
-  box-shadow: 0 0 10px rgba(213, 63, 140, 0.2);
+  padding: 2rem;
+  border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
 }
 
-.activity h2,
-.mapBox h2,
-.chart h2 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #f1f5f9;
+.activity:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-color: #dc2626;
+}
+
+.activity h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.activity h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: #dc2626;
+  border-radius: 2px;
 }
 
 .activity ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  line-height: 1.8;
-  font-size: 0.95rem;
-  color: #d1d5db;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.mapPreview,
-.chartBox {
-  background: #0f172a;
-  padding: 2rem;
-  text-align: center;
-  color: #94a3b8;
-  font-size: 1.1rem;
+.activity li {
+  padding: 1rem 1.25rem;
+  background: #f8fafc;
   border-radius: 8px;
-  border: 1px dashed #475569;
+  border-left: 4px solid #e5e5e5;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #525252;
 }
 
+.activity li:hover {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+  transform: translateX(4px);
+}
 
+.activity li:first-child {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+  color: #1a1a1a;
+  font-weight: 500;
+}
 
+/* Empty state styling */
+.activity li:contains("No recent activity") {
+  text-align: center;
+  color: #a3a3a3;
+  font-style: italic;
+  padding: 2rem;
+  border: 2px dashed #e5e5e5;
+  background: transparent;
+}
 
+/* Map Section */
+.mapBox {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
+}
 
+.mapBox:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-color: #dc2626;
+}
 
+.mapBox h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
 
+.mapBox h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: #dc2626;
+  border-radius: 2px;
+}
+
+.mapPreview {
+  height: 200px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cbd5e1;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mapPreview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="%23cbd5e1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
+  opacity: 0.3;
+}
+
+.mapPreview:hover {
+  border-color: #dc2626;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.mapPreview span {
+  font-size: 1.25rem;
+  color: #64748b;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mapPreview:hover span {
+  color: #dc2626;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main {
+    padding: 1.5rem;
+    gap: 2rem;
+  }
+  
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  
+  .lowerSection {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+  
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .lowerSection {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card {
+    padding: 1.5rem 1.25rem;
+  }
+  
+  .card p {
+    font-size: 2rem;
+  }
+  
+  .activity,
+  .mapBox {
+    padding: 1.5rem;
+  }
+  
+  .activity h2,
+  .mapBox h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .mapPreview {
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 0.75rem;
+  }
+  
+  .card {
+    padding: 1.25rem 1rem;
+  }
+  
+  .card p {
+    font-size: 1.75rem;
+  }
+  
+  .activity,
+  .mapBox {
+    padding: 1.25rem;
+  }
+  
+  .activity li {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .mapPreview {
+    height: 140px;
+  }
+  
+  .mapPreview span {
+    font-size: 1rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .dashboardWrapper {
+    background: #0f0f0f;
+  }
+  
+  .card,
+  .activity,
+  .mapBox {
+    background: #1a1a1a;
+    border-color: #404040;
+  }
+  
+  .card h3 {
+    color: #a3a3a3;
+  }
+  
+  .card p,
+  .activity h2,
+  .mapBox h2 {
+    color: white;
+  }
+  
+  .activity li {
+    background: #262626;
+    border-left-color: #404040;
+    color: #a3a3a3;
+  }
+  
+  .activity li:hover {
+    background: #2d1b1b;
+  }
+  
+  .activity li:first-child {
+    background: #2d1b1b;
+    color: white;
+  }
+  
+  .mapPreview {
+    background: linear-gradient(135deg, #262626 0%, #1a1a1a 100%);
+    border-color: #404040;
+  }
+  
+  .mapPreview:hover {
+    background: linear-gradient(135deg, #2d1b1b 0%, #1f1615 100%);
+  }
+  
+  .mapPreview span {
+    color: #a3a3a3;
+  }
+}
+
+/* Loading states */
+.card:has(p:contains("Loading")) {
+  position: relative;
+}
+
+.card:has(p:contains("Loading"))::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Focus states for accessibility */
+.card:focus-within,
+.activity:focus-within,
+.mapBox:focus-within {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .card:hover,
+  .activity li:hover {
+    transform: none;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .card,
+  .activity,
+  .mapBox {
+    border-width: 2px;
+  }
+  
+  .activity li {
+    border-left-width: 6px;
+  }
+  
+  .mapPreview {
+    border-width: 3px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .dashboardWrapper {
+    background: white;
+  }
+  
+  .card,
+  .activity,
+  .mapBox {
+    border: 2px solid black;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  
+  .mapPreview {
+    display: none;
+  }
+  
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .lowerSection {
+    grid-template-columns: 1fr;
+  }
+}

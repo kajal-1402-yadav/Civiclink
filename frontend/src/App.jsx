@@ -55,7 +55,7 @@ function App() {
           <Route path="/report" element={<ReportIssue />} />
           <Route path="/issues-map" element={<IssueMap />} />
           <Route path="/edit-issue/:issueId" element={<EditIssue />} />
-          <Route path="/community" element={<CommunityIssues />} />
+          <Route path="/all-issues" element={<CommunityIssues />} />
           <Route path="/analytics" element={<Analytics />} />
        
 

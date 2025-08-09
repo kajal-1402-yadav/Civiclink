@@ -58,7 +58,7 @@ const Dashboard = () => {
         </section>
 
         {/* Nested routes will render here */}
-        <Outlet />
+        {/* <Outlet /> */}
       </main>
     </div>
   );

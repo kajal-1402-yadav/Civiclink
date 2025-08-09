@@ -1,169 +1,353 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+.main {
+  background-color: #0f0f0f;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+  color: #f5f5f5;
+}
 
 .container {
-  font-family: 'Roboto', sans-serif;
-  padding: 4rem 2rem;
-  max-width: 1200px;
   margin: 0 auto;
-  background: linear-gradient(to bottom, #0f0f23, #1a1a2e);
-  color: #ffffff;
-  min-height: 100vh;
+  padding: 2rem 1rem;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
   text-align: center;
-  margin-bottom: 2rem;
-  background: linear-gradient(to right, #6366f1, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .filterBar {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
+  justify-content: center;
 }
 
 .filterBar select {
-  padding: 0.5rem 1rem;
+  background: #1a1a1a;
+  color: #eee;
+  border: 1px solid #333;
   border-radius: 8px;
-  border: 1px solid #4b5563;
-  background-color: #1e1e30;
-  color: #f9fafb;
+  padding: 0.6rem 1rem;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 .filterBar select:focus {
-  border-color: #6366f1;
+  border-color: #d9534f; /* unified red */
   outline: none;
 }
 
-.card {
+.filterBar label {
   display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #3a3a5e;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  backdrop-filter: blur(6px);
-  transition: box-shadow 0.3s ease;
+  flex-direction: row;       /* horizontal layout */
+  align-items: center;       /* vertically center label text & input */
+  gap: 0.5rem;               /* spacing between label text and input */
+  font-size: 0.9rem;
+  color: #eee;
+  font-weight: 500;
+  min-width: auto;           /* remove fixed width */
+}
+
+/* date input styles remain same */
+.filterBar input[type="date"] {
+  padding: 0.6rem 1rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #1a1a1a;
+  color: #eee;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+  width: auto;              /* auto width so it shrinks naturally */
+  min-width: 140px;         /* optional, for nicer input width */
+}
+
+.filterBar input[type="date"]:focus {
+  border-color: #d9534f;
+  outline: none;
+}
+
+
+.card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 40px;
+  margin: 20px auto;
+  max-width: 100vw;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .card:hover {
-  box-shadow: 0 0 16px rgba(236, 72, 153, 0.3);
-}
-
-.yourReport {
-  border: 2px solid #34d399; /* green ring */
+  border: 1px solid #d9534f;
+  box-shadow: 0 0 12px rgba(217, 83, 79, 0.4);
 }
 
 .image {
-  width: 100%;
-  max-height: 200px;
+  width: 250px;
+  height: 250px;
   object-fit: cover;
-  border-radius: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #4c4c6d;
+  border-radius: 8px;
+}
+
+.details {
+  flex: 1;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .details h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.3rem;
-  color: #fbbf24;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
+.details p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Progress Bar */
 .progressSection {
-  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .progressBarBg {
-  width: 100%;
-  height: 8px;
-  background-color: #2c2c44;
-  border-radius: 8px;
+  background-color: #333;
+  height: 10px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .progressBarFill {
+  background-color: #4caf50;
   height: 100%;
-  background: linear-gradient(to right, #6366f1, #ec4899);
-  transition: width 0.4s ease;
+  transition: width 0.5s ease-in-out;
 }
 
 .progressLabels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
-  color: #cbd5e1;
-  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  color: #aaa;
+  padding: 0 5px;
 }
 
 .progressPercent {
+  color: #ccc;
   font-size: 0.9rem;
-  margin-top: 0.25rem;
-  color: #93c5fd;
 }
 
 .priorityTag {
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: capitalize;
-  color: #fff;
-  margin-left: 0.5rem;
+  font-size: 0.75rem; /* Smaller text */
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 2px 8px; /* Space around text */
+  border-radius: 999px; /* Fully rounded pill shape */
+  border: 2px solid currentColor; /* Border uses text color */
+  background: transparent; /* Transparent inside */
 }
 
-.priorityLow {
-  background-color: #10b981;
+/* Priority colors */
+.priorityTag.low {
+  color: rgb(149, 250, 55); /* Green */
 }
 
-.priorityMedium {
-  background-color: #f59e0b;
+.priorityTag.medium {
+  color: rgb(241, 206, 50); /* Yellow */
 }
 
-.priorityHigh {
-  background-color: #ef4444;
+.priorityTag.high {
+  color: #ff4d4f; /* Red */
 }
 
-.voteBox {
+.resolvedBy {
+  font-size: 0.95rem;
+  color: #a7f3d0;
+}
+
+/* Vote & Comment Buttons - Unified */
+.voteBox,
+.actionsRow {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-top: 1rem;
-  font-size: 1rem;
+  gap: 0.5rem;
 }
 
+.voteBtn,
+.commentBtn,
 .voteBox button {
-  background: none;
+  background-color: #d9534f;
+  color: white;
   border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
   cursor: pointer;
-  font-size: 1.4rem;
-  transition: transform 0.2s ease;
-  color: #cbd5e1;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
 }
 
+.voteBtn:hover,
+.commentBtn:hover,
 .voteBox button:hover {
-  transform: scale(1.2);
-  color: #f472b6;
+  background-color: #c9302c;
+}
+
+.voteCount {
+  font-weight: bold;
+  min-width: 1.5rem;
+  text-align: center;
 }
 
 .toggleComment {
   cursor: pointer;
   color: #93c5fd;
-  font-size: 0.95rem;
   text-decoration: underline;
-  margin-left: auto;
 }
 
-.resolvedBy {
-  margin-top: 0.5rem;
-  font-style: italic;
-  color: #6ee7b7;
+.toggleComment:hover {
+  color: #60a5fa;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #f5f1f1;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.iconButton {
+  cursor: pointer;
+  color: gray;
+  transition: color 0.3s ease;
+}
+
+/* .iconButton:hover {
+  color: #007bff; 
+} */
+
+.iconButton.voteActive {
+  color: #007bff; /* blue or any accent color you prefer */
+}
+
+/* .iconButton.voteActive:hover {
+  color: #0056b3;
+} */
+.comments-section {
+  margin-top: 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #eee;
+}
+
+.comments-section h4 {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.comment-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.comment-input input[type="text"] {
+  flex: 1;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #1a1a1a;
+  color: #eee;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.comment-input input[type="text"]:focus {
+  outline: none;
+  border-color: #d9534f;
+}
+
+.comment-input button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.comment-input button:hover {
+  background-color: #c9302c;
+}
+
+.comments-section > div[style] {
+  background-color: #1a1a1a;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 0 8px rgba(255 255 255 / 0.05);
+}
+
+.comments-section strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #d9534f;
+}
+
+.comments-section p {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #ccc;
+  white-space: pre-wrap;
+}
+
+.comments-section button {
+  background-color: #444;
+  color: #eee;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.comments-section button:hover {
+  background-color: #d9534f;
+  color: white;
+}
+
+.comments-section button:last-child {
+  margin-right: 0;
+}
+
+/* For Cancel button in editing mode */
+.comment-input button + button {
+  background-color: #777;
+}
+
+.comment-input button + button:hover {
+  background-color: #555;
 }

@@ -36,8 +36,12 @@ function Form({ route, method }) {
           const userData = userRes.data;
 
           localStorage.setItem("role", userData.role);
-          localStorage.setItem("username", userData.username); // optional
-localStorage.setItem("date_joined", userData.date_joined.split("T")[0]);
+          localStorage.setItem("username", userData.username);
+          localStorage.setItem("user_id", String(userData.id)); // <-- ADD THIS
+          localStorage.setItem(
+            "date_joined",
+            userData.date_joined.split("T")[0]
+          );
 
           if (userData.role === "admin") {
             navigate("/admin-dashboard");

@@ -1,120 +1,138 @@
+.reportIssueWrapper {
+   /* min-height: 100vh; */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+  background-color: rgba(15, 15, 15); /* Avoid default dark backgrounds */
+
+    min-height: calc(100vh - 75px);
+
+}
 
 .reportIssueContainer {
-  max-width: 640px;
-  margin: 60px auto;
-  padding: 40px;
-  background-color: #121212;
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid #222;
+  padding: 2rem;
   border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-  color: #ffffff;
 }
 
 .reportIssueContainer h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 30px;
-  font-weight: bold;
-  background: linear-gradient(to right, #6366f1, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
 }
 
 .reportIssueForm {
   display: flex;
   flex-direction: column;
+  gap: 1.2rem;
 }
 
 .inputLabel {
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #ffffff;
+  font-weight: 600;
+  color: #ddd;
+  margin-bottom: 0.3rem;
 }
 
 .reportIssueForm input,
-.reportIssueForm textarea,
 .reportIssueForm select,
-.reportIssueForm button {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 20px;
-  background-color: #1a1a1a;
-  border: 1px solid #444;
-  color: #ffffff;
+.reportIssueForm textarea {
+  background: #1a1a1a;
+  border: 1px solid #333;
   border-radius: 8px;
-  font-size: 16px;
-  font-family: Consolas, 'Courier New', monospace;
-  transition: border 0.2s ease, background 0.3s ease;
+  padding: 0.7rem 1rem;
+  color: #eee;
+  font-size: 1rem;
+  transition: border 0.2s ease;
 }
 
 .reportIssueForm input:focus,
 .reportIssueForm textarea:focus,
 .reportIssueForm select:focus {
+  border-color: #dc2626;
   outline: none;
-  border-color: #6366f1;
-  background-color: #0e0e0e;
 }
 
 .reportIssueForm textarea {
-  height: 120px;
   resize: vertical;
+  min-height: 100px;
 }
 
-.reportIssueForm button {
-  background: linear-gradient(to right, #6366f1, #ec4899);
+button[type="submit"] {
+  background: #dc2626;
+  color: white;
   border: none;
-  font-weight: bold;
+  border-radius: 8px;
+  padding: 0.8rem 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: background 0.2s ease;
 }
 
-.reportIssueForm button:hover {
-  transform: scale(1.03);
+button[type="submit"]:hover {
+  background: #b91c1c;
 }
 
+/* Image Upload Styles */
 .imageUploadSection {
-  margin-bottom: 24px;
-}
-
-.imageUploadBox {
-  border: 2px dashed #444;
-  padding: 40px 20px;
-  text-align: center;
-  border-radius: 10px;
-  background-color: #1a1a1a;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 1rem;
+}
+
+.imageUploadBox {
+  width: 100%;
+  max-width: 300px;
+  height: 200px;
+  background: #1a1a1a;
+  border: 2px dashed #444;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  transition: background-color 0.3s;
+  align-items: center;
+  color: #aaa;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  margin: 0 auto;
 }
 
 .imageUploadBox:hover {
-  background-color: #2a2a2a;
-}
-
-.uploadIcon {
-  font-size: 42px;
-  margin-bottom: 10px;
-  color: #ec4899;
-}
-
-.uploadText {
-  font-size: 16px;
-  color: #ffffff;
-}
-
-.imageHint {
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 4px;
+  border-color: #dc2626;
 }
 
 .imagePreview {
-  max-width: 100%;
-  max-height: 250px;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 1px solid #555;
+  border-radius: 10px;
+}
+
+.uploadIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.uploadText {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.imageHint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.3rem;
 }

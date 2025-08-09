@@ -2,12 +2,15 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.utils import timezone
+from django.shortcuts import get_object_or_404
 from .permissions import IsAdmin
+\
 from .models import CustomUser, Issue ,Comment
 from .serializers import UserSerializer, IssueSerializer ,CommentSerializer
 from .classify import classify_issue_image
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import DestroyAPIView
+
 # from channels.layers import get_channel_layer
 # from asgiref.sync import async_to_sync
 
@@ -66,17 +69,6 @@ class ReportIssueView(generics.CreateAPIView):
             "confidence": confidence,
         }
 
-        # ✅ WebSocket: Notify all listening clients about the new issue
-        
-        # channel_layer = get_channel_layer()
-        # async_to_sync(channel_layer.group_send)(
-        #     "issues",  # Channel group name (you'll later subscribe to this group from frontend WebSocket)
-        #     {
-        #         "type": "send_new_issue",  # This triggers the method `send_new_issue()` in your consumer.py
-        #         "message": f"New issue reported: {issue.title}",
-        #     }
-        # )
-
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -97,7 +89,18 @@ class UpdateIssueView(generics.RetrieveUpdateAPIView):
         # ✅ Only allow reporters to update their own issues
         return Issue.objects.filter(reporter=self.request.user)
 
+class DeleteIssueView(DestroyAPIView):
+    queryset = Issue.objects.all()
+    serializer_class = IssueSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # reporters can only delete their own issues
+        return Issue.objects.filter(reporter=self.request.user)
+    
+    
+    def perform_destroy(self, instance):
+        instance.delete()  # T
 
 
 #  View issues created by current user
@@ -108,51 +111,72 @@ class MyIssuesView(generics.ListAPIView):
     def get_queryset(self):
         return Issue.objects.filter(reporter=self.request.user)
 
-#  View all issues
-class AllIssuesView(generics.ListAPIView):
-    queryset = Issue.objects.all()
-    serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated]  # Or AllowAny if public
-
-#  Admin resolves an issue
-class ResolveIssueView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
-
-    def post(self, request, pk):
-        try:
-            issue = Issue.objects.get(pk=pk)
-        except Issue.DoesNotExist:
-            return Response({'error': 'Issue not found'}, status=404)
-
-        if issue.status == 'resolved':   # ✅ Correct comparison
-            return Response({'message': 'Already resolved'}, status=400)
-
-        issue.status = 'resolved'   # ✅ Correct update
-        issue.resolved_by = request.user
-        issue.save()
-        return Response({'message': 'Issue marked as resolved'})
-
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def upvote_issue(request, issue_id):
+    user = request.user
     try:
         issue = Issue.objects.get(id=issue_id)
-        issue.upvotes += 1
-        issue.save()
-        return Response({"upvotes": issue.upvotes}, status=status.HTTP_200_OK)
     except Issue.DoesNotExist:
         return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
 
+    if issue.upvotes.filter(pk=user.pk).exists():
+        return Response({"message": "Already voted"}, status=status.HTTP_400_BAD_REQUEST)
+
+    issue.upvotes.add(user)
+    return Response({"message": "Vote added"}, status=status.HTTP_200_OK)
+
 @api_view(['POST'])
-def downvote_issue(request, issue_id):
+@permission_classes([IsAuthenticated])
+def remove_vote_issue(request, issue_id):
+    user = request.user
     try:
         issue = Issue.objects.get(id=issue_id)
-        issue.downvotes += 1
-        issue.save()
-        return Response({"downvotes": issue.downvotes}, status=status.HTTP_200_OK)
     except Issue.DoesNotExist:
         return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
+    if issue.upvotes.filter(pk=user.pk).exists():
+        issue.upvotes.remove(user)
+        return Response({"message": "Vote removed"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"message": "No vote to remove"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_voted_issues(request):
+    user = request.user
+    # Get issue IDs the user has voted on
+    voted_issue_ids = user.upvoted_issues.values_list('id', flat=True)
+    data = [{"issueId": issue_id} for issue_id in voted_issue_ids]
+    return Response(data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_issue_detail(request, issue_id):
+    try:
+        issue = Issue.objects.get(id=issue_id)
+    except Issue.DoesNotExist:
+        return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    user_has_voted = issue.upvotes.filter(pk=request.user.pk).exists()
+
+    data = {
+        "id": issue.id,
+        "title": issue.title,
+        "description": issue.description,
+        "status": issue.status,
+        "category": issue.category,
+        "priority": issue.priority,
+        "created_at": issue.created_at.isoformat(),
+        "upvotes_count": issue.upvotes.count(),
+        "user_has_voted": user_has_voted,
+        "reporter_username": issue.reporter.username if issue.reporter else None,
+        "image": issue.image.url if issue.image else None,
+        "address": issue.address,
+    }
+    return Response(data, status=status.HTTP_200_OK)
+
     
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -165,22 +189,20 @@ def public_issues(request):
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def comments_view(request, issue_id):
-    try:
-        issue = Issue.objects.get(id=issue_id)
-    except Issue.DoesNotExist:
-        return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
+    issue = get_object_or_404(Issue, id=issue_id)
 
     if request.method == "GET":
         comments = Comment.objects.filter(issue=issue).order_by("created_at")
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
-    elif request.method == "POST":
+    if request.method == "POST":
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(issue=issue, user=request.user)
+            serializer.save(user=request.user, issue=issue)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     
 @api_view(['DELETE'])
@@ -263,3 +285,22 @@ def update_user(request):
 
     serializer = UserSerializer(user, context={'request': request})
     return Response(serializer.data)
+
+
+@api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def update_comment(request, comment_id):
+    try:
+        # Only allow editing own comments
+        comment = Comment.objects.get(id=comment_id, user=request.user)
+    except Comment.DoesNotExist:
+        return Response({"error": "Comment not found or permission denied."}, status=status.HTTP_404_NOT_FOUND)
+
+    text = request.data.get("text", "").strip()
+    if not text:
+        return Response({"error": "Text cannot be empty."}, status=status.HTTP_400_BAD_REQUEST)
+
+    comment.text = text
+    comment.save()
+    serializer = CommentSerializer(comment)
+    return Response(serializer.data, status=status.HTTP_200_OK)

@@ -68,7 +68,10 @@ function ReportIssue() {
 
   return (
     <>
+    
+    <div className={styles.reportIssueWrapper}>
     <Navbar />
+    <div className={styles.main}>
     <div className={styles.reportIssueContainer}>
                   
 
@@ -135,6 +138,8 @@ function ReportIssue() {
 
         <button type="submit">Submit Issue</button>
       </form>
+    </div>
+    </div>
     </div>
     </>
   );

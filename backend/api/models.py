@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+import os
 
 
 # ✅ Custom User Manager
@@ -34,16 +35,15 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-# ✅ Civic Issue Model
+
 class Issue(models.Model):
-    # Define choices for status, category, and priority
     STATUS_CHOICES = (
         ('Open', 'Open'),
         ('Acknowledged', 'Acknowledged'),
         ('In Progress', 'In Progress'),
         ('Resolved', 'Resolved'),
         ('Closed', 'Closed'),
-     )
+    )
 
     CATEGORY_CHOICES = (
         ('road', 'Road'),
@@ -59,26 +59,34 @@ class Issue(models.Model):
         ('high', 'High'),
     ]
 
-
     title = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='issue_images/', blank=True, null=True)
-    address = models.CharField(max_length=255)  # ✅ Replaced lat/lng with address
+    address = models.CharField(max_length=255)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
-    priority = models.CharField(max_length=10,choices=PRIORITY_CHOICES,default='medium',blank=True)
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium', blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Open')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    reporter = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reported_issues')
-    resolved_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='resolved_issues')
+    reporter = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='reported_issues')
+    resolved_by = models.ForeignKey('CustomUser', on_delete=models.SET_NULL, null=True, blank=True, related_name='resolved_issues')
 
-    upvotes = models.PositiveIntegerField(default=0)
-    downvotes = models.PositiveIntegerField(default=0)
-
+    # Replace integer upvotes with ManyToMany field
+    upvotes = models.ManyToManyField('CustomUser', related_name='upvoted_issues', blank=True)
 
     def __str__(self):
         return f"{self.title} ({self.status})"
+
+    def delete(self, *args, **kwargs):
+        if self.image and os.path.isfile(self.image.path):
+            os.remove(self.image.path)
+        super().delete(*args, **kwargs)
+
+    # Optional: helper method to get vote count
+    @property
+    def upvotes_count(self):
+        return self.upvotes.count()
 
 
 class Comment(models.Model):
@@ -89,3 +97,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.user.username} on {self.issue.title}"
+
+
+# class IssueVote(models.Model):
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+#     created_at = models.DateTimeField(auto_now_add=True)
+
+#     class Meta:
+#         unique_together = ('user', 'issue')

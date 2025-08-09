@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../api";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "../styles/EditIssue.module.css";
+import Navbar from "../components/Navbar"; // optional, but good for consistent layout
 
 function EditIssue() {
   const { issueId } = useParams();
@@ -35,7 +36,6 @@ function EditIssue() {
 
     try {
       await api.patch(`/api/update-issue/${issueId}/`, updatedData);
-      console.log("Issue updated successfully");
       navigate("/my-issues");
     } catch (error) {
       console.error("Error updating issue:", error);
@@ -43,60 +43,66 @@ function EditIssue() {
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>Edit Issue</h2>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Title:</label>
-          <input
-            className={styles.input}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
+    <><Navbar />
+   
+    <div className={styles.editWrapper}>
+      
+      <div className={styles.container}>
+        <h2 className={styles.title}>Edit Issue</h2>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Title</label>
+            <input
+              className={styles.input}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Description:</label>
-          <textarea
-            className={styles.textarea}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Description</label>
+            <textarea
+              className={styles.textarea}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Address:</label>
-          <input
-            className={styles.input}
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-        </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Address</label>
+            <input
+              className={styles.input}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Category:</label>
-          <select
-            className={styles.select}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="road">Road</option>
-            <option value="garbage">Garbage</option>
-            <option value="water">Water</option>
-            <option value="electricity">Electricity</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Category</label>
+            <select
+              className={styles.select}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              <option value="road">Road</option>
+              <option value="garbage">Garbage</option>
+              <option value="water">Water</option>
+              <option value="electricity">Electricity</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
-        <button type="submit" className={styles.button}>
-          Update Issue
-        </button>
-      </form>
+          <button type="submit" className={styles.button}>
+            ✅ Update Issue
+          </button>
+        </form>
+      </div>
     </div>
+     </>
   );
 }
 
