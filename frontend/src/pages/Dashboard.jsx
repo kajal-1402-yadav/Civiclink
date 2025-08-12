@@ -1,7 +1,5 @@
-import { Outlet } from "react-router-dom";
 import styles from "../styles/Dashboard.module.css";
 import useUserStats from "../hooks/useUserStats";
-import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 const Dashboard = () => {

@@ -1,12 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import api from "./api";
+import { REFRESH_TOKEN, ACCESS_TOKEN } from "./constants";
+
+// Pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
-
-// Dashboard pages
 import Dashboard from "./pages/Dashboard";
 import MyIssues from "./pages/MyIssues";
 import ReportIssue from "./pages/ReportIssue";
@@ -15,10 +18,9 @@ import EditIssue from "./pages/EditIssue";
 import CommunityIssues from "./pages/CommunityIssues";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
-
-// Admin
 import AdminDashboard from "./pages/AdminDashboard";
 
+// Logout helpers
 function Logout() {
   localStorage.clear();
   return <Navigate to="/login" />;
@@ -30,6 +32,30 @@ function RegisterAndLogout() {
 }
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const refreshAccessToken = async () => {
+      const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+      if (refreshToken) {
+        try {
+          const res = await api.post("/api/token/refresh/", { refresh: refreshToken });
+          localStorage.setItem(ACCESS_TOKEN, res.data.access);
+        } catch (err) {
+          console.error("Refresh token failed", err);
+          localStorage.removeItem(ACCESS_TOKEN);
+          localStorage.removeItem(REFRESH_TOKEN);
+        }
+      }
+      setLoading(false);
+    };
+    refreshAccessToken();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Optional loading spinner
+  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -49,15 +75,13 @@ function App() {
             </ProtectedRoute>
           }
         />
-          {/* ⬇️ Nested under /dashboard (relative paths only) */}
-          <Route path="/user/info" element={<Profile />} />
-          <Route path="/my-issues" element={<MyIssues />} />
-          <Route path="/report" element={<ReportIssue />} />
-          <Route path="/issues-map" element={<IssueMap />} />
-          <Route path="/edit-issue/:issueId" element={<EditIssue />} />
-          <Route path="/all-issues" element={<CommunityIssues />} />
-          <Route path="/analytics" element={<Analytics />} />
-       
+        <Route path="/user/info" element={<Profile />} />
+        <Route path="/my-issues" element={<MyIssues />} />
+        <Route path="/report" element={<ReportIssue />} />
+        <Route path="/issues-map" element={<IssueMap />} />
+        <Route path="/edit-issue/:issueId" element={<EditIssue />} />
+        <Route path="/all-issues" element={<CommunityIssues />} />
+        <Route path="/analytics" element={<Analytics />} />
 
         {/* 🔒 Admin-only dashboard */}
         <Route

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa"; // <-- Added icons
 import api from "../api";
+import styles from "../styles/CommunityIssues.module.css";
 
 function CommentsSection({ issueId, onCommentCountChange }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-
-  // Edit mode tracking
   const [editingCommentId, setEditingCommentId] = useState(null);
-
   const loggedInUserName = localStorage.getItem("username") || "";
 
   useEffect(() => {
     fetchComments();
-    cancelEditing();  // reset on issue change
+    cancelEditing();
   }, [issueId]);
 
   const fetchComments = async () => {
@@ -30,7 +29,6 @@ function CommentsSection({ issueId, onCommentCountChange }) {
 
     try {
       if (editingCommentId) {
-        // Save edited comment
         const res = await api.put(`/api/comment/${editingCommentId}/update/`, {
           text: newComment,
         });
@@ -46,7 +44,6 @@ function CommentsSection({ issueId, onCommentCountChange }) {
           alert("Failed to update comment.");
         }
       } else {
-        // Add new comment
         const res = await api.post(`/api/issue/${issueId}/comments/`, {
           issue: issueId,
           text: newComment,
@@ -84,7 +81,7 @@ function CommentsSection({ issueId, onCommentCountChange }) {
   const startEditing = (comment) => {
     setEditingCommentId(comment.id);
     setNewComment(comment.text);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // scroll to input box for UX
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const cancelEditing = () => {
@@ -93,41 +90,62 @@ function CommentsSection({ issueId, onCommentCountChange }) {
   };
 
   return (
-    <div className="comments-section">
-      <h4>Comments</h4>
+    <div className={styles.commentsSection}>
+      <h4 className={styles.commentsSectionTitle}>Comments</h4>
 
-      <div className="comment-input">
+      <div className={styles.commentInputRow}>
         <input
           type="text"
+          className={styles.commentInputBox}
           placeholder="Write a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
         />
-        <button onClick={handleAddOrEditComment}>
+        <button
+          className={`${styles.commentBtn} ${styles.commentPostBtn}`}
+          onClick={handleAddOrEditComment}
+        >
           {editingCommentId ? "Save" : "Post"}
         </button>
         {editingCommentId && (
-          <button onClick={cancelEditing} style={{ marginLeft: "0.5rem" }}>
+          <button
+            className={`${styles.commentBtn} ${styles.commentCancelBtn}`}
+            onClick={cancelEditing}
+          >
             Cancel
           </button>
         )}
       </div>
 
-      {comments.map((comment) => {
-        const canEdit = comment.user_username === loggedInUserName;
-        return (
-          <div key={comment.id} style={{ marginBottom: "1rem" }}>
-            <strong>{comment.user_username || comment.user?.username || "Unknown"}</strong>
-            <p>{comment.text}</p>
-            {canEdit && !editingCommentId && (
-              <>
-                <button onClick={() => startEditing(comment)}>Edit</button>
-                <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
-              </>
-            )}
-          </div>
-        );
-      })}
+      <div className={styles.commentsList}>
+        {comments.map((comment) => {
+          const canEdit = comment.user_username === loggedInUserName;
+          return (
+            <div className={styles.commentItem} key={comment.id}>
+              <div className={styles.commentContent}>
+                <div>
+                  <span className={styles.commentUser}>
+                    {comment.user_username || comment.user?.username || "Unknown"}
+                  </span>
+                  <p className={styles.commentText}>{comment.text}</p>
+                </div>
+                {canEdit && !editingCommentId && (
+                  <div className={styles.commentActions}>
+                    <FaEdit
+                      className={styles.iconBtn}
+                      onClick={() => startEditing(comment)}
+                    />
+                    <FaTrash
+                      className={styles.iconBtn}
+                      onClick={() => handleDeleteComment(comment.id)}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -42,7 +42,7 @@ export default function Home() {
         <p className={styles.subtitle}>
           Join the movement. Report local issues. Improve your city.
         </p>
-        <Link to="/dashboard" className={styles.ctaButton}>
+        <Link to="/report" className={styles.ctaButton}>
           Get Started
         </Link>
       </main>
@@ -142,10 +142,10 @@ export default function Home() {
             Your voice matters. Start reporting issues and help build a better community today.
           </p>
           <div className={styles.ctaButtons}>
-            <Link to="/dashboard" className={styles.primaryCta}>
+            <Link to="/report" className={styles.primaryCta}>
               Report an Issue
             </Link>
-            <Link to="/api/public-issues" className={styles.secondaryCta}>
+            <Link to="/all-issues" className={styles.secondaryCta}>
               Browse Community Issues
             </Link>
           </div>

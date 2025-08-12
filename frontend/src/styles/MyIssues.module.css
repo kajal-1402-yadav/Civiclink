@@ -18,15 +18,19 @@
   text-align: center;
 }
 
+/* Updated: filter bar matches dark theme and supports all input types */
 .filterBar {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
   justify-content: center;
+  padding: 1rem;
 }
 
-.filterBar select {
+/* Matches selects and date pickers */
+.filterBar select,
+.filterBar input[type="date"] {
   background: #1a1a1a;
   color: #eee;
   border: 1px solid #333;
@@ -36,9 +40,23 @@
   transition: border-color 0.2s ease;
 }
 
-.filterBar select:focus {
+/* Remove white date icon background in Chrome */
+.filterBar input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.filterBar select:focus,
+.filterBar input[type="date"]:focus {
   border-color: #dc2626;
   outline: none;
+}
+
+.filterBar label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ccc;
+  font-size: 0.95rem;
 }
 
 .issueCard {
@@ -166,22 +184,20 @@
   margin-left: auto;
   display: flex;
   gap: 10px;
-    
-
 }
 
 .metaRight button {
   margin-top: 0;
-  border: 2px solid currentColor; /* Border uses text color */
-  background: transparent; /* Transparent inside */
+  border: 2px solid currentColor;
+  background: transparent;
 }
 
-.metaRightEdit{
- color: hsl(91, 94%, 49%);
+.metaRightEdit {
+  color: hsl(91, 94%, 49%);
 }
 
-.metaRightDelete{
- color: hsl(0, 93%, 49%);
+.metaRightDelete {
+  color: hsl(0, 93%, 49%);
 }
 
 .issueMetaRow p {
@@ -196,23 +212,26 @@ button {
   cursor: pointer;
 }
 
-
-
 @media (max-width: 767px) {
   .issueCard {
     padding: 20px;
   }
-
   .issueImage {
     width: 100%;
     height: auto;
   }
-
   .issueRow {
     flex-direction: column;
   }
-
   .issueDetails {
     padding-top: 10px;
+  }
+  .filterBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filterBar select,
+  .filterBar input[type="date"] {
+    width: 100%;
   }
 }
