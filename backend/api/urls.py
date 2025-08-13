@@ -19,6 +19,10 @@ from .views import (
     update_comment,
     user_info,
     update_user,
+    my_comments,
+    recent_activity,
+    predict_image
+   
     
 )
 
@@ -26,9 +30,10 @@ urlpatterns = [
     path('user/register/', CreateUserView.as_view(), name='register'),
     path('report/', ReportIssueView.as_view(), name='report-issue'),
     path('my-issues/', MyIssuesView.as_view(), name='my-issues'),
-    # path('all-issues/', AllIssuesView.as_view(), name='all-issues'),
-    # path('issues-map/', AllIssuesView.as_view(), name='issues-map'),
-    # path('resolve/<int:pk>/', ResolveIssueView.as_view(), name='resolve-issue'),
+       path('my-comments/', my_comments, name='my-comments'),
+    path('recent-activity/', recent_activity, name='recent_activity'),
+    path("predict-image/", predict_image, name="predict-image"),
+
     path('user/info/', user_info, name='user-info'),
     path('update-issue/<int:pk>/', UpdateIssueView.as_view(), name='update-issue'),
     path('issue/<int:issue_id>/upvote/', upvote_issue, name='upvote-issue'),

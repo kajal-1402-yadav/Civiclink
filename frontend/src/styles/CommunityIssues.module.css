@@ -5,26 +5,41 @@
   color: #f5f5f5;
 }
 
+
 .container {
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
-.title {
+.pageTitle {
+  /* margin-bottom: 1.25rem; */
   font-size: 2rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
   text-align: center;
+  position: relative;
 }
 
+/* Red underline */
+.pageTitle::after {
+  content: '';
+  display: block;
+  margin: 0.7rem auto 0 auto;
+  width: 90px;
+  height: 5px;
+  background: #dc2626;
+  border-radius: 2px;
+}
 .filterBar {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-top: 2rem;
   justify-content: center;
+  padding: 1rem;
 }
+
 
 .filterBar select {
   background: #1a1a1a;

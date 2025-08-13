@@ -18,28 +18,25 @@ class UserSerializer(serializers.ModelSerializer):
     
 
         
-        
-from rest_framework import serializers
-from .models import Comment
+    
 
 class CommentSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     user_username = serializers.CharField(source='user.username', read_only=True)
+    issue_title = serializers.CharField(source='issue.title', read_only=True)  # <-- add this
 
     class Meta:
         model = Comment
-        fields = ['id', 'issue', 'user_id', 'user_username', 'text', 'created_at']
+        fields = ['id', 'issue', 'issue_title', 'user_id', 'user_username', 'text', 'created_at']
 
 
 class IssueSerializer(serializers.ModelSerializer):
     reporter_username = serializers.CharField(source='reporter.username', read_only=True)
     resolved_by_username = serializers.SerializerMethodField()
-
-
     image = serializers.ImageField(use_url=True, required=False)
     days_open = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
-
+    comments_count = serializers.SerializerMethodField()
     upvotes_count = serializers.SerializerMethodField()
     user_has_voted = serializers.SerializerMethodField()
 
@@ -49,27 +46,26 @@ class IssueSerializer(serializers.ModelSerializer):
         read_only_fields = ['reporter', 'resolved_by']  # upvotes handled separately
 
     def get_days_open(self, obj):
-        if obj.status == 'resolved' and obj.updated_at:
+        if obj.status and obj.status.lower() == 'resolved' and obj.updated_at:
             return (obj.updated_at.date() - obj.created_at.date()).days
         return (date.today() - obj.created_at.date()).days
 
     def get_upvotes_count(self, obj):
         return obj.upvotes.count()
 
+    def get_comments_count(self, obj):
+        return obj.comments.count()
+
     def get_user_has_voted(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.upvotes.filter(pk=request.user.pk).exists()
-            return False
-    def get_upvotes_count(self, obj):
-        return obj.upvotes.count()
+        return False
 
     def get_resolved_by_username(self, obj):
         if obj.resolved_by:
             return obj.resolved_by.username
         return None
-
-
 
     def create(self, validated_data):
         if 'priority' not in validated_data or not validated_data['priority']:

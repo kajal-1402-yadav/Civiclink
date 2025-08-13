@@ -4,12 +4,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .permissions import IsAdmin
-\
+from django.utils.timezone import now
+from django.utils.timezone import localtime
+
 from .models import CustomUser, Issue ,Comment
 from .serializers import UserSerializer, IssueSerializer ,CommentSerializer
 from .classify import classify_issue_image
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import DestroyAPIView
+# views.py
+from itertools import chain
+import os
+import tempfile
+import traceback
+
+
 
 # from channels.layers import get_channel_layer
 # from asgiref.sync import async_to_sync
@@ -56,28 +65,77 @@ class ReportIssueView(generics.CreateAPIView):
         if issue.image:
             try:
                 image_path = issue.image.path
-                predicted_category, confidence = classify_issue_image(image_path)  # ✅ DL Model result
+                predicted_category, confidence = classify_issue_image(
+                    image_path, threshold=0.4, other_threshold=0.65
+                )
                 issue.category = predicted_category
                 issue.save()
                 print(f"[DL] ✅ Image classified as: {predicted_category} ({confidence*100:.2f}% confidence)")
             except Exception as e:
                 print(f"[DL] ❌ Image classification failed: {e}")
 
-        # ✅ Store for response
+        # Store DL prediction for response
         self.extra_response_data = {
             "category": predicted_category,
             "confidence": confidence,
         }
 
-
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
-        # ✅ Append DL result to the response
         if hasattr(self, 'extra_response_data'):
             response.data.update(self.extra_response_data)
         return response
 
-#Update issue
+
+
+# Define only valid categories
+VALID_CATEGORIES = ['water', 'road', 'electricity', 'garbage', 'other']
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def predict_image(request):
+    uploaded_file = request.FILES.get('image')
+    if not uploaded_file:
+        return Response({"error": "No image uploaded"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Save uploaded file temporarily
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+        for chunk in uploaded_file.chunks():
+            tmp.write(chunk)
+        tmp_path = tmp.name
+
+    try:
+        # Classify the image
+        category, confidence = classify_issue_image(tmp_path)
+
+        # ✅ Force unknown if category not in VALID_CATEGORIES
+        if category not in VALID_CATEGORIES:
+            category = "unknown"
+            confidence = 0.0
+            is_unknown = True
+        else:
+            # Treat low confidence as unknown
+            is_unknown = category == "unknown" or confidence < 0.4
+
+        return Response({
+            "category": category,
+            "confidence": confidence,
+            "is_unknown": is_unknown
+        })
+
+    except Exception as e:
+        print("[ERROR] Image classification failed:")
+        traceback.print_exc()
+        return Response({
+            "category": "unknown",
+            "confidence": 0.0,
+            "is_unknown": True,
+            "error": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 
 class UpdateIssueView(generics.RetrieveUpdateAPIView):
@@ -146,10 +204,20 @@ def remove_vote_issue(request, issue_id):
 @permission_classes([IsAuthenticated])
 def user_voted_issues(request):
     user = request.user
-    # Get issue IDs the user has voted on
-    voted_issue_ids = user.upvoted_issues.values_list('id', flat=True)
-    data = [{"issueId": issue_id} for issue_id in voted_issue_ids]
+    # Get the issues user has voted on
+    voted_issues = user.upvoted_issues.all()
+
+    # Serialize data with issue id, title, and voted timestamp if you have it
+    data = [
+        {
+            "issue_id": issue.id,
+            "issue_title": issue.title,
+            # "voted_at": issue.vote_timestamp if you track it, else None
+        }
+        for issue in voted_issues
+    ]
     return Response(data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -304,3 +372,34 @@ def update_comment(request, comment_id):
     comment.save()
     serializer = CommentSerializer(comment)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_comments(request):
+    user = request.user
+    comments = Comment.objects.filter(user=user).order_by('-created_at')
+    serializer = CommentSerializer(comments, many=True)
+    return Response({
+        'count': comments.count(),
+        'comments': serializer.data[:10],  # Optionally limit to recent 10 for frontend activity display
+    })
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])  # public
+def recent_activity(request):
+    issues = Issue.objects.select_related('reporter').order_by('-created_at')[:5]  # latest 5
+    data = [
+        {
+            "id": issue.id,
+            "title": issue.title,
+            "description": issue.description,
+            "category": issue.category,
+            "status": issue.status,
+            "created_at": localtime(issue.created_at).isoformat(),  # returns ISO string with timezone offset
+            "reporter": issue.reporter.username
+        }
+        for issue in issues
+    ]
+    return Response(data)

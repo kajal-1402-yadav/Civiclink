@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing import image
 categories = ['electricity', 'garbage', 'other', 'road', 'water']
 
 # ✅ Load your trained model
-model = load_model('civiclink_cnn_model.h5')
+model = load_model('api/model.h5')
 
 def predict_image(img_path):
     try:

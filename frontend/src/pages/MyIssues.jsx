@@ -100,10 +100,11 @@ function MyIssuesPage() {
   };
 
   return (
+    <><Navbar />
     <div className={styles.myIssuesWrapper}>
-      <Navbar />
-      <div className={styles.main}>
-        <h2 className={styles.pageTitle}>My Reported Issues</h2>
+      
+      <h1 className={styles.pageTitle}>My Reported Issues</h1>
+
 
         {/* Filter Bar with 6 filters now */}
         <div className={styles.filterBar}>
@@ -251,7 +252,7 @@ function MyIssuesPage() {
           ))
         )}
       </div>
-    </div>
+      </>
   );
 }
 

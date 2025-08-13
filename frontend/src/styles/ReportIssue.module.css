@@ -1,17 +1,43 @@
-.reportIssueWrapper {
-   /* min-height: 100vh; */
+/* Wrapper font applies to all child elements */
+.reportIssueWrapper,
+.reportIssueWrapper input,
+.reportIssueWrapper textarea,
+.reportIssueWrapper select,
+.reportIssueWrapper button,
+.reportIssueWrapper label,
+.reportIssueWrapper p {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #eee; /* default text color */
 }
 
 .main {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 2rem;
-  background-color: rgba(15, 15, 15); /* Avoid default dark backgrounds */
+  background-color: rgba(15, 15, 15);
+  min-height: calc(100vh - 77px);
+}
 
-    min-height: calc(100vh - 75px);
+.pageTitle {
+  margin-bottom: 1.25rem;
+  font-size: 2.7rem;
+  font-weight: 700;
+  color: inherit;
+  letter-spacing: -0.01em;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
 
+/* Red underline styling */
+.pageTitle::after {
+  content: '';
+  display: block;
+  margin: 0.7rem auto 0 auto;
+  width: 90px;
+  height: 5px;
+  background: #dc2626;
+  border-radius: 2px;
 }
 
 .reportIssueContainer {
@@ -20,28 +46,33 @@
   padding: 2rem;
   border-radius: 16px;
   width: 100%;
-  max-width: 600px;
+  max-width: 1000px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
 }
 
 .reportIssueContainer h2 {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: inherit;
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
 .reportIssueForm {
   display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  flex-direction: row;
+  gap: 3rem; /* space between columns */
+  width: 100%;
+  max-width: 900px; /* optional max width for the form */
+  margin: 0 auto;
 }
+
+
+
 
 .inputLabel {
   font-weight: 600;
   color: #ddd;
-  margin-bottom: 0.3rem;
 }
 
 .reportIssueForm input,
@@ -51,7 +82,6 @@
   border: 1px solid #333;
   border-radius: 8px;
   padding: 0.7rem 1rem;
-  color: #eee;
   font-size: 1rem;
   transition: border 0.2s ease;
 }
@@ -86,16 +116,18 @@ button[type="submit"]:hover {
 
 /* Image Upload Styles */
 .imageUploadSection {
+  flex: 1; /* take equal share */
+  max-width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-top: 80px;
 }
 
 .imageUploadBox {
+
   width: 100%;
-  max-width: 300px;
-  height: 200px;
+  height: 320px; /* adjust as needed */
   background: #1a1a1a;
   border: 2px dashed #444;
   border-radius: 12px;
@@ -106,11 +138,6 @@ button[type="submit"]:hover {
   color: #aaa;
   cursor: pointer;
   transition: border-color 0.3s ease;
-  margin: 0 auto;
-}
-
-.imageUploadBox:hover {
-  border-color: #dc2626;
 }
 
 .imagePreview {
@@ -119,6 +146,13 @@ button[type="submit"]:hover {
   object-fit: cover;
   border-radius: 10px;
 }
+
+
+.imageUploadBox:hover {
+  border-color: #dc2626;
+}
+
+
 
 .uploadIcon {
   font-size: 2rem;
@@ -135,4 +169,13 @@ button[type="submit"]:hover {
   font-size: 0.85rem;
   color: #666;
   margin-top: 0.3rem;
+}
+
+
+.formSplit {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }

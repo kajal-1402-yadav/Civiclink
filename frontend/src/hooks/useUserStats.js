@@ -7,7 +7,6 @@ const CACHE_KEY = "userStatsCache";
 
 const useUserStats = () => {
   const [stats, setStats] = useState(() => {
-    // Load cached stats immediately for instant display
     const cached = localStorage.getItem(CACHE_KEY);
     return cached
       ? JSON.parse(cached)
@@ -20,10 +19,7 @@ const useUserStats = () => {
         };
   });
 
-  // Only show loading state if there's no cached data
-  const [loading, setLoading] = useState(
-    !localStorage.getItem(CACHE_KEY)
-  );
+  const [loading, setLoading] = useState(!localStorage.getItem(CACHE_KEY));
 
   const refreshToken = async () => {
     const refresh = localStorage.getItem(REFRESH_TOKEN);
@@ -60,41 +56,61 @@ const useUserStats = () => {
         const token = await getValidAccessToken();
         if (!token) throw new Error("Unauthorized");
 
-        const res = await fetch("http://localhost:8000/api/my-issues/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        // Fetch user issues
+        const issuesRes = await fetch("http://localhost:8000/api/my-issues/", {
+          headers: { Authorization: `Bearer ${token}` },
         });
+        if (!issuesRes.ok) throw new Error(`Failed to fetch issues: ${issuesRes.status}`);
+        const issues = await issuesRes.json();
 
-        if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+        // Fetch user comments (should include created_at and issue info)
+        const commentsRes = await fetch("http://localhost:8000/api/my-comments/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!commentsRes.ok) throw new Error(`Failed to fetch comments: ${commentsRes.status}`);
+        const commentsData = await commentsRes.json();
 
-        const issues = await res.json();
+        // Fetch user votes (should include voted_at and issue info)
+        const votesRes = await fetch("http://localhost:8000/api/user-voted-issues/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!votesRes.ok) throw new Error(`Failed to fetch votes: ${votesRes.status}`);
+        const votesData = await votesRes.json();
 
+        // Stats counts
         const total = issues.length;
         const resolved = issues.filter((i) => i.status === "Resolved").length;
-        const upvotes = issues.reduce((acc, i) => acc + (i.upvotes || 0), 0);
-        const comments = issues.reduce(
-          (acc, i) => acc + (i.comments?.length || 0),
-          0
-        );
+        const upvotes = votesData.length; // votes made by user
+        const comments = commentsData.count || commentsData.length || 0;
 
-        const activity = issues
-          .flatMap((issue) => {
-            const logs = [];
-            logs.push(`🆕 You reported: ${issue.title}`);
-            if (issue.status === "Resolved")
-              logs.push(`✅ Issue resolved: ${issue.title}`);
-            if (issue.upvotes > 0)
-              logs.push(`⬆️ ${issue.upvotes} upvotes on: ${issue.title}`);
-            if (issue.comments?.length > 0)
-              logs.push(`💬 ${issue.comments.length} comments on: ${issue.title}`);
-            return logs;
-          })
-          .slice(0, 6);
+        // Map activity items with timestamps for sorting
+        const issueActivity = issues.flatMap((issue) => {
+          const logs = [];
+          if (issue.created_at)
+            logs.push({ text: `🆕 You reported: ${issue.title}`, timestamp: new Date(issue.created_at) });
+          if (issue.status === "Resolved" && issue.updated_at)
+            logs.push({ text: `✅ Issue resolved: ${issue.title}`, timestamp: new Date(issue.updated_at) });
+          return logs;
+        });
 
-        const newStats = { total, resolved, upvotes, comments, activity };
+        const commentsActivity = (commentsData.comments || commentsData).map((c) => ({
+          text: `💬 You commented on "${c.issue_title || c.issue.title}": "${c.text.substring(0, 40)}..."`,
+          timestamp: new Date(c.created_at),
+        }));
 
-        // Update state and cache
+        const votesActivity = (votesData || []).map((v) => ({
+          text: `⬆️ You upvoted issue: "${v.issue_title || v.issue.title || 'Issue #' + v.issueId}"`,
+          timestamp: new Date(v.voted_at || v.created_at || Date.now()),
+        }));
+
+        // Merge and sort descending by timestamp
+        const combinedActivity = [...issueActivity, ...commentsActivity, ...votesActivity]
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .slice(0, 6)
+          .map((item) => item.text);
+
+        const newStats = { total, resolved, upvotes, comments, activity: combinedActivity };
+
         setStats(newStats);
         localStorage.setItem(CACHE_KEY, JSON.stringify(newStats));
       } catch (error) {

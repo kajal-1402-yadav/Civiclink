@@ -99,10 +99,3 @@ class Comment(models.Model):
         return f"Comment by {self.user.username} on {self.issue.title}"
 
 
-# class IssueVote(models.Model):
-#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-#     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     class Meta:
-#         unique_together = ('user', 'issue')
