@@ -3,18 +3,39 @@
 .profileWrapper {
   background: #f8fafc;
   min-height: 100vh;
-
+  margin-top: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
 }
 
 .profileContainer {
   max-width: 600px;
-  margin: 3rem auto;
+  margin: 0 auto;
   padding: 2rem;
 
 }
+.pageTitle {
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.01em;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
 
+/* Red underline */
+.pageTitle::after {
+  content: '';
+  display: block;
+  margin: 0.7rem auto 0 auto;
+  width: 90px;
+  height: 5px;
+  background: #dc2626;
+  border-radius: 2px;
+}
 .card {
   background: white;
   padding: 2rem;
@@ -24,12 +45,7 @@
   text-align: center;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1.5rem;
-}
+
 
 /* Avatar */
 .avatarWrapper {

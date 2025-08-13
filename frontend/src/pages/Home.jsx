@@ -1,15 +1,66 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 import Symbol from "../assets/Symbol.png";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [activities, setActivities] = useState([]);
 
   const handleLogout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     navigate("/");
   };
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/recent-activity/") // change to your backend URL
+      .then((res) => res.json())
+      .then((data) => setActivities(data))
+      .catch((err) => console.error("Error fetching recent activity:", err));
+  }, []);
+
+  // Pick an emoji based on category
+  const getIcon = (category) => {
+    switch (category) {
+      case "road":
+        return "🚧";
+      case "electricity":
+        return "💡";
+      case "garbage":
+        return "🗑️";
+      case "water":
+        return "💧";
+      case "park":
+        return "🌳";
+      case "other":
+        return "📌";
+      default:
+        return "📍";
+    }
+  };
+
+  // Helper function to show relative time like "3 minutes ago"
+  function timeAgo(dateString) {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffMs = now - past;
+
+    const seconds = Math.floor(diffMs / 1000);
+    if (seconds < 60) return "Just now";
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
+
+    // For older than a week, show formatted date like "Aug 5"
+    return past.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
 
   return (
     <div className={styles.homeWrapper}>
@@ -56,46 +107,25 @@ export default function Home() {
               <div className={styles.featureIcon}>📍</div>
               <h3 className={styles.featureTitle}>Report Issues</h3>
               <p className={styles.featureDescription}>
-                Spot a pothole, broken streetlight, or graffiti? Report it instantly with photos and location details.
+                Spot a pothole, broken streetlight, or graffiti? Report it
+                instantly with photos and location details.
               </p>
             </div>
             <div className={styles.featureCard}>
               <div className={styles.featureIcon}>👥</div>
               <h3 className={styles.featureTitle}>Community Support</h3>
               <p className={styles.featureDescription}>
-                Connect with neighbors, vote on priority issues, and work together for community improvement.
+                Connect with neighbors, vote on priority issues, and work
+                together for community improvement.
               </p>
             </div>
             <div className={styles.featureCard}>
               <div className={styles.featureIcon}>🏛️</div>
               <h3 className={styles.featureTitle}>Government Response</h3>
               <p className={styles.featureDescription}>
-                Local authorities receive reports directly and provide updates on resolution progress.
+                Local authorities receive reports directly and provide updates
+                on resolution progress.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className={styles.statsSection}>
-        <div className={styles.container}>
-          <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>2,847</div>
-              <div className={styles.statLabel}>Issues Resolved</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>15,432</div>
-              <div className={styles.statLabel}>Active Citizens</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>89%</div>
-              <div className={styles.statLabel}>Response Rate</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>24hrs</div>
-              <div className={styles.statLabel}>Avg Response Time</div>
             </div>
           </div>
         </div>
@@ -106,30 +136,26 @@ export default function Home() {
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>Recent Community Activity</h2>
           <div className={styles.activityFeed}>
-            <div className={styles.activityItem}>
-              <div className={styles.activityIcon}>🚧</div>
-              <div className={styles.activityContent}>
-                <h4 className={styles.activityTitle}>Road Repair Completed</h4>
-                <p className={styles.activityDescription}>Main Street pothole fixed - Thanks to community reports!</p>
-                <span className={styles.activityTime}>2 hours ago</span>
-              </div>
-            </div>
-            <div className={styles.activityItem}>
-              <div className={styles.activityIcon}>💡</div>
-              <div className={styles.activityContent}>
-                <h4 className={styles.activityTitle}>Streetlight Installation</h4>
-                <p className={styles.activityDescription}>New LED streetlights installed on Oak Avenue for better safety.</p>
-                <span className={styles.activityTime}>1 day ago</span>
-              </div>
-            </div>
-            <div className={styles.activityItem}>
-              <div className={styles.activityIcon}>🌳</div>
-              <div className={styles.activityContent}>
-                <h4 className={styles.activityTitle}>Park Cleanup Initiative</h4>
-                <p className={styles.activityDescription}>Community volunteers cleaned Central Park - 50+ participants!</p>
-                <span className={styles.activityTime}>3 days ago</span>
-              </div>
-            </div>
+            {activities.length > 0 ? (
+              activities.slice(0, 3).map((activity) => (
+                <div key={activity.id} className={styles.activityItem}>
+                  <div className={styles.activityIcon}>
+                    {getIcon(activity.category)}
+                  </div>
+                  <div className={styles.activityContent}>
+                    <h4 className={styles.activityTitle}>{activity.title}</h4>
+                    <p className={styles.activityDescription}>
+                      {activity.description}
+                    </p>
+                    <span className={styles.activityTime}>
+                      {timeAgo(activity.created_at)}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No recent activity yet.</p>
+            )}
           </div>
         </div>
       </section>
@@ -139,7 +165,8 @@ export default function Home() {
         <div className={styles.container}>
           <h2 className={styles.ctaTitle}>Ready to Make a Difference?</h2>
           <p className={styles.ctaDescription}>
-            Your voice matters. Start reporting issues and help build a better community today.
+            Your voice matters. Start reporting issues and help build a better
+            community today.
           </p>
           <div className={styles.ctaButtons}>
             <Link to="/report" className={styles.primaryCta}>
@@ -164,14 +191,19 @@ export default function Home() {
                 <span className={styles.logoText}>CivicLink</span>
               </div>
               <p className={styles.footerDescription}>
-                Empowering citizens to create positive change in their communities.
+                Empowering citizens to create positive change in their
+                communities.
               </p>
             </div>
             <div className={styles.footerLinks}>
               <div className={styles.footerColumn}>
                 <h4 className={styles.footerHeading}>Platform</h4>
-                <Link to="/dashboard" className={styles.footerLink}>Dashboard</Link>
-                <Link to="/api/public-issues" className={styles.footerLink}>Community</Link>
+                <Link to="/dashboard" className={styles.footerLink}>
+                  Dashboard
+                </Link>
+                <Link to="/api/public-issues" className={styles.footerLink}>
+                  Community
+                </Link>
                 <Link to="/profile" className={styles.footerLink}>Profile</Link>
               </div>
               <div className={styles.footerColumn}>

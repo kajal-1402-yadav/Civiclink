@@ -7,11 +7,14 @@ const Dashboard = () => {
     useUserStats();
 
   return (
+    <> <Navbar />
     <div className={styles.dashboardWrapper}>
-      <Navbar />
+     
+
+      {/* Title */}
+<h1 className={styles.pageTitle}>My Stats</h1>
 
       {/* Main Dashboard Content */}
-      <main className={styles.main}>
         {/* Stats Cards */}
         <section className={styles.stats}>
           <div className={styles.card}>
@@ -54,11 +57,8 @@ const Dashboard = () => {
             </div>
           </div>
         </section>
-
-        {/* Nested routes will render here */}
-        {/* <Outlet /> */}
-      </main>
     </div>
+    </>
   );
 };
 
