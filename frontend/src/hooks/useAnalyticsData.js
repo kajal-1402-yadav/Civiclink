@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const BASE_URL = 'http://localhost:8000'; // adjust if using env vars
+const BASE_URL = 'http://localhost:8000'; 
 
 const useAnalyticsData = () => {
   const [totalIssues, setTotalIssues] = useState(0);
@@ -71,7 +71,6 @@ const useAnalyticsData = () => {
         setTimeline(timelineData);
       } catch (error) {
         console.error('❌ Analytics fetch error:', error);
-        // fallback
         setResolved(0);
         setClosed(0);
         setAcknowledged(0);

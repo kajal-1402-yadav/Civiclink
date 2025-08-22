@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api";
 import styles from "../styles/MyIssues.module.css";
 import Navbar from "../components/Navbar";
+import Modal from "../components/Modal";
 import { FiMapPin, FiCalendar, FiClock, FiEdit2, FiTrash2 } from "react-icons/fi";
 
 function MyIssuesPage() {
@@ -16,6 +17,11 @@ function MyIssuesPage() {
     sortBy: ""
   });
   const [commentCounts, setCommentCounts] = useState({});
+  const [confirmModal, setConfirmModal] = useState({ open: false, issueId: null });
+  const [editOpen, setEditOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [editData, setEditData] = useState({ id: null, title: "", description: "", address: "", category: "road" });
   const navigate = useNavigate();
 
   const fetchIssuesAndComments = async () => {
@@ -44,21 +50,72 @@ function MyIssuesPage() {
     fetchIssuesAndComments();
   }, []);
 
-  const deleteIssue = async (id) => {
-    if (window.confirm("Are you sure you want to delete this issue? This action cannot be undone.")) {
-      try {
-        await api.delete(`/api/issue/${id}/delete/`);
-        setIssues(issues.filter((issue) => issue.id !== id));
-      } catch (error) {
-        console.error("Error deleting issue:", error);
-      }
+  const openEdit = async (id) => {
+    setEditLoading(true);
+    try {
+      const res = await api.get(`/api/update-issue/${id}/`);
+      const issue = res.data;
+      setEditData({
+        id: issue.id,
+        title: issue.title || "",
+        description: issue.description || "",
+        address: issue.address || "",
+        category: issue.category || "road",
+      });
+      setEditOpen(true);
+    } catch (e) {
+      console.error("Failed to load issue for edit", e);
+    } finally {
+      setEditLoading(false);
     }
   };
 
-  // Apply filtering & sorting like CommunityIssues
+  const closeEdit = () => {
+    if (saveLoading) return; 
+    setEditOpen(false);
+    setEditData({ id: null, title: "", description: "", address: "", category: "road" });
+  };
+
+  const saveEdit = async () => {
+    if (!editData.id) return;
+    setSaveLoading(true);
+    try {
+      const payload = {
+        title: editData.title,
+        description: editData.description,
+        address: editData.address,
+      };
+      const res = await api.patch(`/api/update-issue/${editData.id}/`, payload);
+      const updated = res.data;
+      setIssues((prev) => prev.map((it) => (it.id === updated.id ? { ...it, ...updated } : it)));
+      setEditOpen(false);
+    } catch (e) {
+      console.error("Failed to save issue", e);
+    } finally {
+      setSaveLoading(false);
+    }
+  };
+
+  const deleteIssue = (id) => {
+    setConfirmModal({ open: true, issueId: id });
+  };
+
+  const performDelete = async () => {
+    const id = confirmModal.issueId;
+    if (!id) return;
+    try {
+      await api.delete(`/api/issue/${id}/delete/`);
+      setIssues((prev) => prev.filter((issue) => issue.id !== id));
+      setConfirmModal({ open: false, issueId: null });
+    } catch (error) {
+      console.error("Error deleting issue:", error);
+      setConfirmModal({ open: false, issueId: null });
+    }
+  };
+
   const filteredIssues = issues
     .filter((issue) => {
-      const matchStatus = filters.status ? issue.status === filters.status : true;
+      const matchStatus = filters.status ? (issue.status || "").toLowerCase() === filters.status : true;
       const matchCategory = filters.category ? issue.category === filters.category : true;
       const matchPriority = filters.priority ? issue.priority === filters.priority : true;
 
@@ -106,7 +163,6 @@ function MyIssuesPage() {
       <h1 className={styles.pageTitle}>My Reported Issues</h1>
 
 
-        {/* Filter Bar with 6 filters now */}
         <div className={styles.filterBar}>
           {/* Status */}
           <select
@@ -234,7 +290,7 @@ function MyIssuesPage() {
                     <div className={styles.metaRight}>
                       <button
                         className={styles.metaRightEdit}
-                        onClick={() => navigate(`/edit-issue/${issue.id}`)}
+                        onClick={() => openEdit(issue.id)}
                       >
                         <FiEdit2 /> Edit
                       </button>
@@ -252,6 +308,66 @@ function MyIssuesPage() {
           ))
         )}
       </div>
+      {/* Confirm Delete Modal */}
+      <Modal
+        isOpen={confirmModal.open}
+        title="Delete Issue"
+        message={
+          "Are you sure you want to delete this issue? This action cannot be undone."
+        }
+        onClose={() => setConfirmModal({ open: false, issueId: null })}
+        actions={[
+          { label: "Cancel", onClick: () => setConfirmModal({ open: false, issueId: null }) },
+          { label: "Delete", variant: "primary", onClick: performDelete },
+        ]}
+      />
+
+      {/* Edit Issue Modal */}
+      <Modal
+        isOpen={editOpen}
+        title={editLoading ? "Loading..." : "Edit Issue"}
+        onClose={closeEdit}
+        message={
+          editLoading ? (
+            "Fetching issue details..."
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <label style={{ color: '#ddd', fontWeight: 600 }}>Title</label>
+              <input
+                value={editData.title}
+                onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                style={{ background:'#1a1a1a', border:'1px solid #333', color:'#eee', borderRadius:8, padding:'10px' }}
+                required
+              />
+              <label style={{ color: '#ddd', fontWeight: 600 }}>Description</label>
+              <textarea
+                value={editData.description}
+                onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                style={{ background:'#1a1a1a', border:'1px solid #333', color:'#eee', borderRadius:8, padding:'10px', minHeight:100, resize:'vertical' }}
+                required
+              />
+              <label style={{ color: '#ddd', fontWeight: 600 }}>Address</label>
+              <input
+                value={editData.address}
+                onChange={(e) => setEditData({ ...editData, address: e.target.value })}
+                style={{ background:'#1a1a1a', border:'1px solid #333', color:'#eee', borderRadius:8, padding:'10px' }}
+                required
+              />
+              <label style={{ color: '#aaa', fontWeight: 600 }}>Category (AI-detected)</label>
+              <input
+                value={editData.category || ''}
+                readOnly
+                style={{ background:'#121212', border:'1px dashed #333', color:'#bbb', borderRadius:8, padding:'10px' }}
+              />
+            </div>
+          )
+        }
+        actions={[
+          { label: 'Cancel', onClick: closeEdit },
+          { label: saveLoading ? 'Saving...' : 'Save', variant: 'primary', onClick: saveEdit },
+        ]}
+      />
+
       </>
   );
 }

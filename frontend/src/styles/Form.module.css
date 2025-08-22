@@ -1,8 +1,6 @@
-/* Form.module.css – True Black & Red (Dark Theme, Matches Home.module.css) */
-
 .formWrapper {
   min-height: 100vh;
-  background: #0b0b0b;         /* exact as .homeWrapper in Home */
+  background: #0b0b0b;         
   color: white;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: flex;
@@ -13,19 +11,15 @@
   width: 100%;
 }
 
-
-
-
-
 .formContent {
   position: relative;
-  max-width: 462px;                    /* Was 370px – increased by 25% */
+  max-width: 462px;                    
   width: 100%;
   background:#1a1a1a;
   border-radius: 12px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.66);
   border: 1px solid #404040;
-  padding: 2.75rem 2.04rem 2.75rem;    /* Was 2.2rem 1.7rem – increased for comfort */
+  padding: 2.75rem 2.04rem 2.75rem;   
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,6 +79,14 @@
   gap: 0.5rem;
 }
 
+.errorText {
+  color: #fca5a5; /* light red */
+  font-size: 0.85rem;
+  margin: -0.1rem 0 0.35rem 0.25rem;
+  line-height: 1.3;
+  white-space: pre-line;
+}
+
 .input {
   font-size: 1rem;
   padding: 0.65rem 1rem;
@@ -104,7 +106,6 @@
   box-shadow: 0 0 5px 1px #dc2626;
 }
 
-/* Button - red, matching CTA */
 .button {
   background: #dc2626;
   color: white;

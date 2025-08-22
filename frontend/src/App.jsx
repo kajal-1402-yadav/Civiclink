@@ -13,14 +13,10 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import MyIssues from "./pages/MyIssues";
 import ReportIssue from "./pages/ReportIssue";
-import IssueMap from "./pages/IssueMap";
-import EditIssue from "./pages/EditIssue";
 import CommunityIssues from "./pages/CommunityIssues";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
-import AdminDashboard from "./pages/AdminDashboard";
 
-// Logout helpers
 function Logout() {
   localStorage.clear();
   return <Navigate to="/login" />;
@@ -53,7 +49,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Optional loading spinner
+    return <div>Loading...</div>;
   }
 
   return (
@@ -66,7 +62,7 @@ function App() {
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="*" element={<NotFound />} />
 
-        {/* 🔐 Main App Protected Routes */}
+        {/*Main App Protected Routes */}
         <Route
           path="/dashboard"
           element={
@@ -78,22 +74,11 @@ function App() {
         <Route path="/user/info" element={<Profile />} />
         <Route path="/my-issues" element={<MyIssues />} />
         <Route path="/report" element={<ReportIssue />} />
-        <Route path="/issues-map" element={<IssueMap />} />
-        <Route path="/edit-issue/:issueId" element={<EditIssue />} />
+        
         <Route path="/all-issues" element={<CommunityIssues />} />
         <Route path="/analytics" element={<Analytics />} />
 
-        {/* 🔒 Admin-only dashboard */}
-        <Route
-          path="/admin-dashboard"
-          element={
-            <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
 
-        {/* 🔓 Optional: Logout Route */}
         <Route path="/logout" element={<Logout />} />
       </Routes>
     </BrowserRouter>

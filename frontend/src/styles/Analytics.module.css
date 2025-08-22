@@ -1,10 +1,6 @@
-/* Analytics.module.css - Matching CivicLink Theme */
-
 .analytics {
   min-height: 100vh;
-  background: #f8fafc;
   padding: 3rem;
-  
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -74,17 +70,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* Map Placeholder */
-.mapPlaceholder {
-  background: #f1f5f9;
-  padding: 4rem 2rem;
-  text-align: center;
-  border: 2px dashed #e5e5e5;
-  border-radius: 12px;
-  color: #6b7280;
-  font-size: 1.25rem;
-  font-style: italic;
-}
 
 /* Responsive */
 @media (max-width: 768px) {

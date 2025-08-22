@@ -17,7 +17,6 @@ import {
 } from 'recharts';
 import Navbar from '../components/Navbar';
 
-// Colors for pie slices
 const STATUS_COLORS = ['#a3b5d1', '#81858b', '#ef4444']; 
 const CATEGORY_COLORS = ['#ef4444', '#6b7280']; // Bar chart colors
 
@@ -35,7 +34,34 @@ const Analytics = () => {
     timeline,
   } = useAnalyticsData();
 
-  // Pie chart grouping (Option 2)
+  // Custom white tooltips (value only)
+  const BarTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const value = payload[0]?.value;
+      return (
+        <div style={{ background: '#ffffff', color: '#111', padding: '8px 10px', borderRadius: 6, boxShadow: '0 2px 10px rgba(0,0,0,0.15)', fontSize: 12, fontWeight: 600 }}>
+          {value}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const PieTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const value = payload[0]?.value;
+      const name = payload[0]?.name || payload[0]?.payload?.name;
+      return (
+        <div style={{ background: '#ffffff', color: '#111', padding: '8px 10px', borderRadius: 6, boxShadow: '0 2px 10px rgba(0,0,0,0.15)' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{name}</div>
+          <div style={{ fontSize: 12, fontWeight: 600 }}>{value}</div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Pie chart grouping
   const pieData = [
     { name: 'Open Issues', value: (open || 0) + (acknowledged || 0) },
     { name: 'In Progress', value: inProgress || 0 },
@@ -64,7 +90,7 @@ const Analytics = () => {
             <p>{resolved}</p>
           </div>
           <div className={styles.card}>
-            <h3>Upvotes</h3>
+            <h3>Votes</h3>
             <p>{upvotes}</p>
           </div>
           <div className={styles.card}>
@@ -111,7 +137,7 @@ const Analytics = () => {
                   <Cell key={`cell-${index}`} fill={STATUS_COLORS[index % STATUS_COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', color: 'white' }} />
+              <Tooltip content={<PieTooltip />} cursor={false} />
               <Legend wrapperStyle={{ color: 'white' }} />
             </PieChart>
           </ResponsiveContainer>
@@ -124,7 +150,7 @@ const Analytics = () => {
             <BarChart data={barData}>
               <XAxis dataKey="name" stroke="#fff" />
               <YAxis stroke="#fff" />
-              <Tooltip />
+              <Tooltip cursor={false} content={<BarTooltip />} />
               <Bar dataKey="value">
                 {barData.map((_, index) => (
                   <Cell key={`bar-cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
@@ -134,11 +160,7 @@ const Analytics = () => {
           </ResponsiveContainer>
         </section>
 
-        {/* Map Placeholder */}
-        <section className={styles.section}>
-          <h2>Issue Location Heatmap</h2>
-          <div className={styles.mapPlaceholder}>🗺️ Map placeholder – lat/lng not available</div>
-        </section>
+        
       </div>
     </>
   );

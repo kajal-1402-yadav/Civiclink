@@ -7,6 +7,14 @@ export default function Home() {
   const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
 
+  const scrollTo = (id) => (e) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
@@ -14,13 +22,12 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/recent-activity/") // change to your backend URL
+    fetch("http://localhost:8000/api/recent-activity/") 
       .then((res) => res.json())
       .then((data) => setActivities(data))
       .catch((err) => console.error("Error fetching recent activity:", err));
   }, []);
 
-  // Pick an emoji based on category
   const getIcon = (category) => {
     switch (category) {
       case "road":
@@ -40,7 +47,6 @@ export default function Home() {
     }
   };
 
-  // Helper function to show relative time like "3 minutes ago"
   function timeAgo(dateString) {
     const now = new Date();
     const past = new Date(dateString);
@@ -58,7 +64,6 @@ export default function Home() {
     const days = Math.floor(hours / 24);
     if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
 
-    // For older than a week, show formatted date like "Aug 5"
     return past.toLocaleDateString(undefined, { month: "short", day: "numeric" });
   }
 
@@ -99,7 +104,7 @@ export default function Home() {
       </main>
 
       {/* Features Section */}
-      <section className={styles.featuresSection}>
+      <section id="how-it-works" className={styles.featuresSection}>
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>How CivicLink Works</h2>
           <div className={styles.featuresGrid}>
@@ -107,24 +112,27 @@ export default function Home() {
               <div className={styles.featureIcon}>📍</div>
               <h3 className={styles.featureTitle}>Report Issues</h3>
               <p className={styles.featureDescription}>
-                Spot a pothole, broken streetlight, or graffiti? Report it
-                instantly with photos and location details.
+              Spot a pothole, broken streetlight, or garbage? Report it
+                instantly with photos and location details. Our AI helps
+                auto-categorize your report (road, electricity, water, garbage, other).
               </p>
             </div>
             <div className={styles.featureCard}>
               <div className={styles.featureIcon}>👥</div>
               <h3 className={styles.featureTitle}>Community Support</h3>
               <p className={styles.featureDescription}>
-                Connect with neighbors, vote on priority issues, and work
-                together for community improvement.
+              Upvote or remove your vote on issues and add comments.
+                The community feed updates counts and status as changes are
+                saved.
               </p>
             </div>
             <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>🏛️</div>
-              <h3 className={styles.featureTitle}>Government Response</h3>
+            <div className={styles.featureIcon}>📊</div>
+              <h3 className={styles.featureTitle}>Analytics & Insights</h3>
               <p className={styles.featureDescription}>
-                Local authorities receive reports directly and provide updates
-                on resolution progress.
+                Visualize trends, categories, and upvotes to understand what
+                matters most. Use the dashboard to track progress and impact
+                across your community.
               </p>
             </div>
           </div>
@@ -132,7 +140,7 @@ export default function Home() {
       </section>
 
       {/* Recent Activity */}
-      <section className={styles.activitySection}>
+      <section id="recent-activity" className={styles.activitySection}>
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>Recent Community Activity</h2>
           <div className={styles.activityFeed}>
@@ -201,16 +209,17 @@ export default function Home() {
                 <Link to="/dashboard" className={styles.footerLink}>
                   Dashboard
                 </Link>
-                <Link to="/api/public-issues" className={styles.footerLink}>
+                <Link to="/all-issues" className={styles.footerLink}>
                   Community
                 </Link>
-                <Link to="/profile" className={styles.footerLink}>Profile</Link>
+                <Link to="/user/info" className={styles.footerLink}>Profile</Link>
               </div>
+              </div>
+              <div>
               <div className={styles.footerColumn}>
-                <h4 className={styles.footerHeading}>Support</h4>
-                <Link to="/help" className={styles.footerLink}>Help Center</Link>
-                <Link to="/contact" className={styles.footerLink}>Contact Us</Link>
-                <Link to="/feedback" className={styles.footerLink}>Feedback</Link>
+              <h4 className={styles.footerHeading}>Learn</h4>
+                  <a href="#how-it-works" onClick={scrollTo('how-it-works')} className={styles.footerLink}>How it works</a>
+                  <a href="#recent-activity" onClick={scrollTo('recent-activity')} className={styles.footerLink}>Recent Activity</a>
               </div>
             </div>
           </div>

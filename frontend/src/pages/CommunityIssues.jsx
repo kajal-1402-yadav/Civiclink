@@ -32,6 +32,8 @@ function CommunityIssues() {
       const issuesData = resIssues.data.map(issue => ({
         ...issue,
         image: fixImageUrl(issue.image),
+        upvotes_count: Number(issue.upvotes_count) || 0,
+        user_has_voted: Boolean(issue.user_has_voted),
       }));
 
       setIssues(issuesData);
@@ -60,7 +62,6 @@ function CommunityIssues() {
   const fixImageUrl = (imageUrl) => {
     if (!imageUrl) return null;
     if (imageUrl.startsWith("http")) return imageUrl;
-    // Replace with your actual backend URL, no trailing slash
    return `http://localhost:8000${imageUrl}`;
 };
 
@@ -89,7 +90,7 @@ function CommunityIssues() {
 
   const filteredIssues = issues
     .filter((issue) => {
-      const matchStatus = filters.status ? issue.status === filters.status : true;
+      const matchStatus = filters.status ? (issue.status || "").toLowerCase() === filters.status : true;
       const matchCategory = filters.category ? issue.category === filters.category : true;
       const matchPriority = filters.priority ? issue.priority === filters.priority : true;
 
@@ -108,52 +109,26 @@ function CommunityIssues() {
           return new Date(a.created_at) - new Date(b.created_at);
         case "dateDesc":
           return new Date(b.created_at) - new Date(a.created_at);
-        case "upvotes":
-          return b.upvotes_count - a.upvotes_count;
+        case "votes":
+          return (b.upvotes_count || 0) - (a.upvotes_count || 0);
         default:
           return 0;
       }
     });
 
   const handleVote = async (issueId) => {
-    const issue = issues.find((i) => i.id === issueId);
-    if (!issue) return;
-
-    const hasVoted = issue.user_has_voted;
-
-    // Optimistic UI update
-    setIssues((prevIssues) =>
-      prevIssues.map((issue) =>
-        issue.id === issueId
-          ? {
-              ...issue,
-              user_has_voted: !hasVoted,
-              upvotes_count: issue.upvotes_count + (hasVoted ? -1 : 1),
-            }
-          : issue
-      )
-    );
-
     try {
-      if (!hasVoted) {
-        await api.post(`/api/issue/${issueId}/upvote/`);
-      } else {
-        await api.post(`/api/issue/${issueId}/remove-vote/`);
-      }
-
-      // Fetch updated issue detail and merge vote fields + fix image URL
-      const { data: updatedIssue } = await api.get(`/api/issue/${issueId}/`);
-      const fixedImageUrl = fixImageUrl(updatedIssue.image);
+      // single toggle endpoint; backend returns updated counts/state
+      const { data } = await api.post(`/api/issue/${issueId}/upvote/`);
+      const { upvotes_count, user_has_voted } = data || {};
 
       setIssues((prevIssues) =>
         prevIssues.map((issue) =>
           issue.id === issueId
             ? {
-                ...issue, // keep all old fields
-                upvotes_count: updatedIssue.upvotes_count,
-                user_has_voted: updatedIssue.user_has_voted,
-                image: fixedImageUrl,
-                // optionally update other fields if they can change (status, description, etc.)
+                ...issue,
+                upvotes_count: Number(upvotes_count) || issue.upvotes_count || 0,
+                user_has_voted: Boolean(user_has_voted),
               }
             : issue
         )
@@ -161,19 +136,7 @@ function CommunityIssues() {
     } catch (error) {
       const backendMessage = error.response?.data?.message || error.message;
       console.error("Error updating vote:", backendMessage);
-
-      // rollback optimistic update
-      setIssues((prevIssues) =>
-        prevIssues.map((issue) =>
-          issue.id === issueId
-            ? {
-                ...issue,
-                user_has_voted: hasVoted,
-                upvotes_count: issue.upvotes_count + (hasVoted ? 1 : -1),
-              }
-            : issue
-        )
-      );
+      // Do not mutate counts on error
     }
   };
 
@@ -244,7 +207,7 @@ function CommunityIssues() {
               <option value="">Sort By</option>
               <option value="dateAsc">Date Ascending</option>
               <option value="dateDesc">Date Descending</option>
-              <option value="upvotes">Votes</option>
+              <option value="votes">Votes</option>
             </select>
           </div>
 
@@ -263,7 +226,7 @@ function CommunityIssues() {
                   alt="Issue"
                   className={styles.image}
                   onError={(e) => {
-                    e.target.style.display = "none"; // hide image if broken
+                    e.target.style.display = "none"; 
                   }}
                 />
               )}
@@ -330,7 +293,7 @@ function CommunityIssues() {
                       onClick={() => handleVote(issue.id)}
                       title="Vote"
                     />{" "}
-                    {issue.upvotes_count} votes
+                    {(Number(issue.upvotes_count) || 0)} votes
                   </span>
 
                   <span

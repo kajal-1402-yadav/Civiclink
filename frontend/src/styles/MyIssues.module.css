@@ -9,7 +9,6 @@
 
 
 .pageTitle {
-  /* margin-bottom: 1.25rem; */
   font-size: 2rem;
   font-weight: 700;
   color: white;
@@ -19,7 +18,6 @@
   top: 30px;
 }
 
-/* Red underline */
 .pageTitle::after {
   content: '';
   display: block;
@@ -32,7 +30,6 @@
 
 
 
-/* Updated: filter bar matches dark theme and supports all input types */
 .filterBar {
   display: flex;
   flex-wrap: wrap;
@@ -42,7 +39,6 @@
   padding: 1rem;
 }
 
-/* Matches selects and date pickers */
 .filterBar select,
 .filterBar input[type="date"] {
   background: #1a1a1a;
@@ -54,7 +50,6 @@
   transition: border-color 0.2s ease;
 }
 
-/* Remove white date icon background in Chrome */
 .filterBar input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
@@ -79,7 +74,7 @@
   border-radius: 10px;
   padding: 40px;
   margin: 20px auto;
-  max-width: 100vw;
+  max-width: 95vw;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 

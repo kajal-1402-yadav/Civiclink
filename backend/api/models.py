@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 import os
 
 
-# ✅ Custom User Manager
+# Custom User Manager
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
@@ -20,7 +20,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('role', 'admin')
         return self.create_user(username, email, password, **extra_fields)
 
-# ✅ Custom User Model
+# Custom User Model
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('reporter', 'Reporter'),
@@ -68,11 +68,8 @@ class Issue(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Open')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     reporter = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='reported_issues')
     resolved_by = models.ForeignKey('CustomUser', on_delete=models.SET_NULL, null=True, blank=True, related_name='resolved_issues')
-
-    # Replace integer upvotes with ManyToMany field
     upvotes = models.ManyToManyField('CustomUser', related_name='upvoted_issues', blank=True)
 
     def __str__(self):
@@ -83,7 +80,6 @@ class Issue(models.Model):
             os.remove(self.image.path)
         super().delete(*args, **kwargs)
 
-    # Optional: helper method to get vote count
     @property
     def upvotes_count(self):
         return self.upvotes.count()

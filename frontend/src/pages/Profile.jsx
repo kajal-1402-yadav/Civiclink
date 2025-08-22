@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FiEdit } from "react-icons/fi"; // ✅ Pencil icon
+import React, { useState, useEffect, useRef } from "react";
+import { FiEdit } from "react-icons/fi"; 
 import api from "../api";
 import styles from "../styles/Profile.module.css";
 import Navbar from "../components/Navbar";
@@ -14,6 +14,7 @@ const Profile = () => {
     profile_picture: null,
   });
   const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access");
@@ -74,6 +75,18 @@ const Profile = () => {
     }
   };
 
+  const cancelEdit = () => {
+    setFormData({
+      username: user?.username || "",
+      email: user?.email || "",
+      password: "",
+      profile_picture: null,
+    });
+    setPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setEditMode(false);
+  };
+
   if (!user) return <div className={styles.loading}>Loading...</div>;
 
   return (
@@ -87,34 +100,34 @@ const Profile = () => {
 
             <div className={styles.profileTop}>
               <div className={styles.avatarWrapper}>
-                <img
-                  className={styles.avatar}
-                  src={
-                    preview
-                      ? preview
-                      : user.profile_picture
-                      ? user.profile_picture
-                      : "/assets/user-placeholder.png"
-                  }
-                  alt="Profile"
-                />
-
-                {/* ✅ WhatsApp-style floating pencil icon */}
-                {editMode && (
-                  <>
-                    <label htmlFor="profilePicInput" className={styles.avatarEditIcon}>
-                      <FiEdit size={18} />
+                <div className={styles.avatarClickArea}>
+                  <img
+                    className={styles.avatar}
+                    src={
+                      preview
+                        ? preview
+                        : user.profile_picture
+                        ? user.profile_picture
+                        : "/assets/user-placeholder.png"
+                    }
+                    alt="Profile"
+                  />
+                  {editMode && (
+                    <label htmlFor="profilePicInput" className={styles.avatarCenterIcon} title="Change photo">
+                      <FiEdit size={28} />
                     </label>
-                    <input
-                      type="file"
-                      id="profilePicInput"
-                      name="profile_picture"
-                      onChange={handleChange}
-                      accept="image/*"
-                      className={styles.hiddenFileInput}
-                    />
-                  </>
-                )}
+                  )}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  id="profilePicInput"
+                  name="profile_picture"
+                  onChange={handleChange}
+                  accept="image/*"
+                  disabled={!editMode}
+                  className={styles.hiddenFileInput}
+                />
               </div>
             </div>
 
@@ -152,7 +165,7 @@ const Profile = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setEditMode(false)}
+                      onClick={cancelEdit}
                       className={styles.cancelBtn}
                     >
                       Cancel

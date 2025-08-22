@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa"; // <-- Added icons
+import { FaEdit, FaTrash } from "react-icons/fa"; 
 import api from "../api";
 import styles from "../styles/CommunityIssues.module.css";
 

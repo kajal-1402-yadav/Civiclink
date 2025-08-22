@@ -1,29 +1,70 @@
 from rest_framework import serializers
 from .models import CustomUser, Issue ,Comment
 from datetime import date
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S.%fZ", read_only=True)
+    confirm_password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'password', 'role', 'profile_picture', 'date_joined']
+        fields = ['id', 'username', 'email', 'password', 'confirm_password', 'role', 'profile_picture', 'date_joined']
         extra_kwargs = {
             'password': {'write_only': True},
             'role': {'read_only': True},
         }
 
-    def create(self, validated_data):
-        return CustomUser.objects.create_user(**validated_data)
-    
+    def validate_email(self, value: str):
+        value = (value or '').strip().lower()
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email is already registered.")
+        return value
 
-        
+    def validate_username(self, value: str):
+        value = (value or '').strip()
+        if CustomUser.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Username already taken. Please choose another.")
+        return value
+
+    def validate(self, attrs):
+        # Confirm password match
+        password = attrs.get('password')
+        confirm = attrs.get('confirm_password')
+        if password != confirm:
+            raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
+
+        # Custom password policy: min 8, at least one special char, one lowercase
+        pwd = password or ""
+        errors = []
+        if len(pwd) < 8:
+            errors.append("Must be at least 8 characters long.")
+        if not any(c.islower() for c in pwd):
+            errors.append("Must contain at least one lowercase letter.")
+        if not any(not c.isalnum() for c in pwd):
+            errors.append("Must include at least one special character.")
+        if errors:
+            raise serializers.ValidationError({"password": errors})
+
+        try:
+            validate_password(password)
+        except DjangoValidationError as e:
+            raise serializers.ValidationError({"password": list(e.messages)})
+
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('confirm_password', None)
+        if 'email' in validated_data and validated_data['email']:
+            validated_data['email'] = validated_data['email'].strip().lower()
+        return CustomUser.objects.create_user(**validated_data)
     
 
 class CommentSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     user_username = serializers.CharField(source='user.username', read_only=True)
-    issue_title = serializers.CharField(source='issue.title', read_only=True)  # <-- add this
+    issue_title = serializers.CharField(source='issue.title', read_only=True)  
 
     class Meta:
         model = Comment
@@ -43,7 +84,7 @@ class IssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issue
         fields = '__all__'
-        read_only_fields = ['reporter', 'resolved_by']  # upvotes handled separately
+        read_only_fields = ['reporter', 'resolved_by']  
 
     def get_days_open(self, obj):
         if obj.status and obj.status.lower() == 'resolved' and obj.updated_at:

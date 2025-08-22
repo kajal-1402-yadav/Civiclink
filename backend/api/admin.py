@@ -3,23 +3,23 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Issue
 from datetime import date
 
-# ✅ CustomUser Admin using UserAdmin
+# CustomUser Admin using UserAdmin
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ('username', 'email', 'role', 'is_staff', 'is_superuser')  # Removed 'name'
+    list_display = ('username', 'email', 'role', 'is_staff', 'is_superuser')  
     list_filter = ('role', 'is_staff', 'is_superuser')
     search_fields = ('username', 'email')
 
     fieldsets = UserAdmin.fieldsets + (
-        ('Additional Info', {'fields': ('role',)}),  # Removed 'name'
+        ('Additional Info', {'fields': ('role',)}),  
     )
 
     add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Additional Info', {'fields': ('role',)}),  # Removed 'name'
+        ('Additional Info', {'fields': ('role',)}),  
     )
 
-# ✅ Issue Admin
+#Issue Admin
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
     list_display = [
@@ -44,12 +44,14 @@ class IssueAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def save_model(self, request, obj, form, change):
-        if obj.status == 'resolved' and not obj.resolved_by:
+        # Match model STATUS_CHOICES values 'Resolved' or 'Closed'
+        if obj.status in ('Resolved', 'Closed') and not obj.resolved_by:
             obj.resolved_by = request.user
         super().save_model(request, obj, form, change)
 
     def days_open(self, obj):
-        if obj.status == 'resolved' and obj.updated_at:
+        # Match model STATUS_CHOICES value 'Resolved'
+        if obj.status == 'Resolved' and obj.updated_at:
             return (obj.updated_at.date() - obj.created_at.date()).days
         return (date.today() - obj.created_at.date()).days
 

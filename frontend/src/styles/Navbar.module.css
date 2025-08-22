@@ -1,5 +1,3 @@
-/* Navbar.module.css - Black & Red Professional Design */
-
 .navbar {
   position: sticky;
   top: 0;
@@ -91,11 +89,10 @@
   white-space: nowrap;
 }
 
-/* New clicked nav link style */
 .clickedNavLink {
-  border: 2px solid #dc2626;  /* red border */
+  border: 2px solid #dc2626;  
   border-radius: 6px;
-  padding: 0.48rem 0.92rem; /* slightly adjusted so element size doesn’t jump */
+  padding: 0.48rem 0.92rem; 
   box-sizing: border-box;
   color: #dc2626;
   font-weight: 600;
@@ -120,6 +117,24 @@
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
 }
 
+/* Mobile menu button (hidden on desktop) */
+.menuToggle {
+  display: none;
+  background: transparent;
+  border: 0;
+  padding: 0.25rem;
+  cursor: pointer;
+}
+
+.menuBar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #1a1a1a;
+  margin: 5px 0;
+  transition: background 0.2s ease;
+}
+
 @media (prefers-color-scheme: dark) {
   .navbar {
     background: rgba(26, 26, 26, 0.95);
@@ -133,6 +148,10 @@
   .navLinks a {
     color: white;
   }
+
+  .menuBar {
+    background: #fff;
+  }
 }
 
 /* Loading state */
@@ -143,4 +162,39 @@
 .navbar.loading .navLinks a {
   opacity: 0.6;
   cursor: wait;
+}
+
+/* Responsive behaviour */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .menuToggle {
+    display: inline-block;
+  }
+
+  .navLinks {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem 1rem;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .open {
+    display: flex;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .navLinks {
+      background: rgba(26, 26, 26, 0.98);
+      border-bottom-color: #404040;
+    }
+  }
 }

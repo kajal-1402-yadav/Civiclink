@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from '../styles/Navbar.module.css';
 import Symbol from "../assets/Symbol.png";
@@ -6,80 +6,103 @@ import Symbol from "../assets/Symbol.png";
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const headerRef = useRef(null);
 
-  // Map pathnames to your link keys
-  const pathToLink = {
-    '/dashboard': 'dashboard',
-    '/my-issues': 'my-issues',
-    '/report': 'report',
-    '/analytics': 'analytics',
-    '/user/info/': 'profile',
+  
+  const navSections = {
+    home: [
+      { to: '/dashboard', label: 'Dashboard' },
+      { to: '/all-issues', label: 'Community' },
+    ],
+    dashboard: [
+      { to: '/dashboard', label: 'My Stats' },
+      { to: '/my-issues', label: 'My Issues' },
+      { to: '/report', label: 'Report Issue' },
+      { to: '/user/info', label: 'Profile' },
+    ],
+    community: [
+      { to: '/all-issues', label: 'Community Issues' },
+      { to: '/analytics', label: 'Analytics' },
+    ]
   };
 
-  const [clickedLink, setClickedLink] = useState(pathToLink[location.pathname] || null);
+  
+  const getCurrentSection = () => {
+    if (location.pathname.startsWith('/all-issues') || location.pathname.startsWith('/analytics')) {
+      return 'community';
+    }
+    if (location.pathname === '/home') return 'home';
+    return 'dashboard';
+  };
 
-  // Update clickedLink when path changes (e.g. on page load or back/forward)
+  const currentSection = getCurrentSection();
+  const [clickedLink, setClickedLink] = useState(location.pathname);
+
+  
   useEffect(() => {
-    setClickedLink(pathToLink[location.pathname] || null);
+    setClickedLink(location.pathname);
+    setMenuOpen(false); 
   }, [location.pathname]);
 
-  const handleClick = (linkName) => {
-    setClickedLink(linkName);
+  
+
+  const handleBack = () => {
+    if (currentSection === 'dashboard' || currentSection === 'community') {
+      navigate('/home');
+    } else {
+      navigate(-1); 
+    }
   };
 
   return (
-    <header className={styles.navbar}>
-      <div className={styles.navLeft}>
-        <div className={styles.iconContainer}>
-          <div className={styles.iconCircle}>
-            <img src={Symbol} alt="CivicLink Logo" />
+    <>
+      <header ref={headerRef} className={styles.navbar}>
+        <div className={styles.navLeft}>
+          <div className={styles.iconContainer}>
+            <div className={styles.iconCircle}>
+              <img src={Symbol} alt="CivicLink Logo" />
+            </div>
           </div>
+          <div className={styles.navTitle}>CivicLink</div>
         </div>
-        <div className={styles.navTitle}>CivicLink</div>
-      </div>
-      <nav className={styles.navLinks}>
-        <Link
-          to="/dashboard"
-          onClick={() => handleClick('dashboard')}
-          className={clickedLink === 'dashboard' ? styles.clickedNavLink : ''}
+        {/* Mobile menu toggle */}
+        <button
+          className={styles.menuToggle}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setMenuOpen((v) => !v)}
         >
-          My Stats
-        </Link>
-        <Link
-          to="/my-issues"
-          onClick={() => handleClick('my-issues')}
-          className={clickedLink === 'my-issues' ? styles.clickedNavLink : ''}
-        >
-          My Issues
-        </Link>
-        <Link
-          to="/report"
-          onClick={() => handleClick('report')}
-          className={clickedLink === 'report' ? styles.clickedNavLink : ''}
-        >
-          Report Issue
-        </Link>
-        <Link
-          to="/analytics"
-          onClick={() => handleClick('analytics')}
-          className={clickedLink === 'analytics' ? styles.clickedNavLink : ''}
-        >
-          Analytics
-        </Link>
-        <Link
-          to="/user/info/"
-          onClick={() => handleClick('profile')}
-          className={clickedLink === 'profile' ? styles.clickedNavLink : ''}
-        >
-          Profile
-        </Link>
-
-        <button className={styles.backBtn} onClick={() => navigate("/home")}>
-          Back
+          <span className={styles.menuBar}></span>
+          <span className={styles.menuBar}></span>
+          <span className={styles.menuBar}></span>
         </button>
-      </nav>
-    </header>
+        
+        <nav
+          id="primary-navigation"
+          ref={navRef}
+          className={`${styles.navLinks} ${menuOpen ? styles.open : ''}`}
+        >
+          {navSections[currentSection].map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={clickedLink === item.to ? styles.clickedNavLink : ''}
+              onClick={() => setClickedLink(item.to)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <button className={styles.backBtn} onClick={handleBack}>
+            Back
+          </button>
+        </nav>
+      </header>
+    </>
   );
 };
 
 export default Navbar;
+

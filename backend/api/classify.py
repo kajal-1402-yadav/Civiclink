@@ -46,7 +46,7 @@ else:
 #     except Exception as e:
 #         print(f"[DL] ❌ Error classifying image: {e}")
 #         return "other", 0.0
-def classify_issue_image(img_path, threshold=0.4, other_threshold=0.65):
+def classify_issue_image(img_path, threshold=0.5, other_threshold=0.9):
     """
     Predicts category of an issue image.
     - 'other' is valid for infrastructure/misc issues.
@@ -80,4 +80,3 @@ def classify_issue_image(img_path, threshold=0.4, other_threshold=0.65):
     except Exception as e:
         print(f"[DL] ❌ Error classifying image: {e}")
         return "unknown", 0.0
-

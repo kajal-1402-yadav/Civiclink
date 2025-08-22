@@ -130,7 +130,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# Use IST for display (admin/templates). With USE_TZ=True, database remains UTC.
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

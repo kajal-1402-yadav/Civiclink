@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/LandingPage.module.css';
 import Symbol from '../assets/Symbol.png';
+import Civic from '../assets/Civic.png';
 
 const LandingPage = () => {
   return (
@@ -38,7 +39,7 @@ const LandingPage = () => {
               <img 
                 alt="A woman using smartphone" 
                 className={styles.mainImage}
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4Ry6lzNZitapFIkHh6BAa2I8H6llbE9mapkq5Ic7VlIQ1jBivAlU5VRJAcFm6Wt6zHvqkODd8pl4Jko8l_qnlR_8WPZRLQi0CeqA0XdyEnw3U59ynZAtHYOrLGB1HDMzRsuOJBtXTwGGggG2VPD0Y6B86lObm9_ztMTB0dURY5Qt9iZuuqtiyUn86b49dE0Bh1CjpJIbtdC8DKTepsV8eOIQwUT5Y2Y_DqgZ5Z7G9Zdc2AUDDRNQlDJrxIQkj-RwE6QWDNrdg7A"
+                src={Civic}
               />
               <div className={styles.iconContainer}>
                 <div className={styles.iconCircle}>

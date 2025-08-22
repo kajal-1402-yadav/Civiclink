@@ -13,7 +13,7 @@ const useUserStats = () => {
       : {
           total: 0,
           resolved: 0,
-          upvotes: 0,
+          votes: 0,
           comments: 0,
           activity: [],
         };
@@ -56,34 +56,30 @@ const useUserStats = () => {
         const token = await getValidAccessToken();
         if (!token) throw new Error("Unauthorized");
 
-        // Fetch user issues
         const issuesRes = await fetch("http://localhost:8000/api/my-issues/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!issuesRes.ok) throw new Error(`Failed to fetch issues: ${issuesRes.status}`);
         const issues = await issuesRes.json();
 
-        // Fetch user comments (should include created_at and issue info)
         const commentsRes = await fetch("http://localhost:8000/api/my-comments/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!commentsRes.ok) throw new Error(`Failed to fetch comments: ${commentsRes.status}`);
         const commentsData = await commentsRes.json();
 
-        // Fetch user votes (should include voted_at and issue info)
         const votesRes = await fetch("http://localhost:8000/api/user-voted-issues/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!votesRes.ok) throw new Error(`Failed to fetch votes: ${votesRes.status}`);
         const votesData = await votesRes.json();
 
-        // Stats counts
         const total = issues.length;
         const resolved = issues.filter((i) => i.status === "Resolved").length;
-        const upvotes = votesData.length; // votes made by user
+        const votes = votesData.length; 
         const comments = commentsData.count || commentsData.length || 0;
 
-        // Map activity items with timestamps for sorting
+        // Build activity items with timestamps for sorting
         const issueActivity = issues.flatMap((issue) => {
           const logs = [];
           if (issue.created_at)
@@ -99,17 +95,16 @@ const useUserStats = () => {
         }));
 
         const votesActivity = (votesData || []).map((v) => ({
-          text: `⬆️ You upvoted issue: "${v.issue_title || v.issue.title || 'Issue #' + v.issueId}"`,
+          text: `⬆️ You voted issue: "${v.issue_title || v.issue.title || 'Issue #' + v.issueId}"`,
           timestamp: new Date(v.voted_at || v.created_at || Date.now()),
         }));
 
-        // Merge and sort descending by timestamp
         const combinedActivity = [...issueActivity, ...commentsActivity, ...votesActivity]
           .sort((a, b) => b.timestamp - a.timestamp)
           .slice(0, 6)
           .map((item) => item.text);
 
-        const newStats = { total, resolved, upvotes, comments, activity: combinedActivity };
+        const newStats = { total, resolved, votes, comments, activity: combinedActivity };
 
         setStats(newStats);
         localStorage.setItem(CACHE_KEY, JSON.stringify(newStats));

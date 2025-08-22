@@ -1,4 +1,3 @@
-/* Wrapper font applies to all child elements */
 .reportIssueWrapper,
 .reportIssueWrapper input,
 .reportIssueWrapper textarea,
@@ -7,7 +6,7 @@
 .reportIssueWrapper label,
 .reportIssueWrapper p {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #eee; /* default text color */
+  color: #eee; 
 }
 
 .main {
@@ -29,7 +28,6 @@
   z-index: 2;
 }
 
-/* Red underline styling */
 .pageTitle::after {
   content: '';
   display: block;
@@ -61,14 +59,11 @@
 .reportIssueForm {
   display: flex;
   flex-direction: row;
-  gap: 3rem; /* space between columns */
+  gap: 3rem; 
   width: 100%;
-  max-width: 900px; /* optional max width for the form */
+  max-width: 900px; 
   margin: 0 auto;
 }
-
-
-
 
 .inputLabel {
   font-weight: 600;
@@ -116,7 +111,7 @@ button[type="submit"]:hover {
 
 /* Image Upload Styles */
 .imageUploadSection {
-  flex: 1; /* take equal share */
+  flex: 1;
   max-width: 50%;
   display: flex;
   flex-direction: column;
@@ -125,9 +120,8 @@ button[type="submit"]:hover {
 }
 
 .imageUploadBox {
-
   width: 100%;
-  height: 320px; /* adjust as needed */
+  height: 320px; 
   background: #1a1a1a;
   border: 2px dashed #444;
   border-radius: 12px;
@@ -147,12 +141,9 @@ button[type="submit"]:hover {
   border-radius: 10px;
 }
 
-
 .imageUploadBox:hover {
   border-color: #dc2626;
 }
-
-
 
 .uploadIcon {
   font-size: 2rem;
@@ -171,11 +162,59 @@ button[type="submit"]:hover {
   margin-top: 0.3rem;
 }
 
-
 .formSplit {
   flex: 1;
   max-width: 50%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+  .reportIssueContainer {
+    padding: 1.5rem;
+  }
+  .reportIssueForm {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .pageTitle {
+    font-size: 2rem;
+  }
+  .reportIssueForm {
+    flex-direction: column;
+    max-width: 100%;
+    gap: 1.5rem;
+  }
+  .imageUploadSection,
+  .formSplit {
+    max-width: 100%;
+  }
+  .imageUploadSection {
+    margin-top: 0;
+  }
+  .imageUploadBox {
+    height: 280px;
+  }
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: 0 0.5rem;
+  }
+  .reportIssueContainer {
+    padding: 1rem;
+  }
+  .pageTitle {
+    font-size: 1.75rem;
+  }
+  .imageUploadBox {
+    height: 220px;
+  }
+  button[type="submit"] {
+    width: 100%;
+  }
 }
